@@ -40,6 +40,7 @@ public class UI {
         for (int i=0;i<5;i++){
             individualDiceBase[i]=new JPanel();
             individualDiceBase[i].setLayout(new BoxLayout(individualDiceBase[i],BoxLayout.Y_AXIS));
+            base.add(individualDiceBase[i]);
         }
     }
 }
