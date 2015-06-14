@@ -52,12 +52,9 @@ public class FirstFrame {
         JButton confirm=new JButton("Confirm Selection");
         confirm.setAlignmentX(Component.RIGHT_ALIGNMENT);
         base.add(confirm, BorderLayout.SOUTH);
-        confirm.addActionListener(new ActionListener() {
-                                      @Override
-                                      public void actionPerformed(ActionEvent e) {
+        confirm.addActionListener(ae -> {
                                           startGame(textFields[3].getText(), textFields[2].getText(), textFields[1].getText(), textFields[0].getText());
                                           selectionFrame.dispatchEvent(new WindowEvent(selectionFrame, WindowEvent.WINDOW_CLOSING));
-                                      }
                                   }
         );
         //make the JFrame the right size, non resizable and make it visible
