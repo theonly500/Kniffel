@@ -8,7 +8,10 @@ import java.util.ArrayList;
  */
 public class FirstFrame {
 
-    public FirstFrame(){
+    private UI userinterface;
+
+    public FirstFrame(UI userinterface){
+        this.userinterface=userinterface;
         //create and set the basics of the JFrame
         JFrame selectionFrame = new JFrame("Player Selection");
         selectionFrame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
@@ -53,8 +56,8 @@ public class FirstFrame {
         confirm.setAlignmentX(Component.RIGHT_ALIGNMENT);
         base.add(confirm, BorderLayout.SOUTH);
         confirm.addActionListener(ae -> {
-                                          startGame(textFields[3].getText(), textFields[2].getText(), textFields[1].getText(), textFields[0].getText());
-                                          selectionFrame.dispatchEvent(new WindowEvent(selectionFrame, WindowEvent.WINDOW_CLOSING));
+                                        selectionFrame.dispose();
+                                        startGame(textFields[3].getText(), textFields[2].getText(), textFields[1].getText(), textFields[0].getText());
                                   }
         );
         //make the JFrame the right size, non resizable and make it visible
@@ -65,8 +68,10 @@ public class FirstFrame {
         selectionFrame.setVisible(true);
     }
 
+    //start up the game
     private void startGame(String playerOne, String playerTwo, String playerThree, String playerFour){
         ArrayList<String> names=new ArrayList<>();
+        //check if there was a player entered
         if(!playerOne.contentEquals("Player 1")){
             names.add(playerOne);
         }
@@ -79,8 +84,7 @@ public class FirstFrame {
         if(!playerFour.contentEquals("Player 4")){
             names.add(playerFour);
         }
-        Calc calc=new Calc();
-        UI userInterface=new UI(calc, names);
+        userinterface.start(names);
         System.out.println(names);
     }
 }
