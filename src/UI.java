@@ -8,6 +8,7 @@ public class UI {
 
     //all visible GUI display elements
     JFrame frame;
+    JButton rerollButton;
 
     //all invisible GUI display elements
     JPanel base;
@@ -42,5 +43,6 @@ public class UI {
             individualDiceBase[i].setLayout(new BoxLayout(individualDiceBase[i],BoxLayout.Y_AXIS));
             base.add(individualDiceBase[i]);
         }
+        rerollButton=new JButton("Reroll");
     }
 }
