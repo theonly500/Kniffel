@@ -10,7 +10,9 @@ public class Startup
     }
 
     public static void main(String[] args) {
-        FirstFrame firstFrame=new FirstFrame();
+        Calc calc=new Calc();
+        UI ui=new UI(calc);
+        FirstFrame firstFrame=new FirstFrame(ui);
     }
 
 }
