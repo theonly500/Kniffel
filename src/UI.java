@@ -1,5 +1,7 @@
+import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
+import java.io.IOException;
 import java.util.ArrayList;
 
 /**
@@ -13,7 +15,6 @@ public class UI {
     private JButton rerollButton;
     private JTable resultTable;
     private JButton confirmSelection;
-    private ImageIcon[] diceSides;
 
     //all invisible GUI display elements
     private JPanel base;
@@ -47,20 +48,21 @@ public class UI {
         base.add(diceBase);
         //create and add the button for every singular dice
         diceButtons=new JButton[5];
-        for (int i=0;i<4;i++){
+        for (int i=0;i<5;i++){
             diceButtons[i]=new JButton();
-            diceButtons[i].setIcon(diceSides[1]);
+            try {
+                Image img= ImageIO.read(getClass().getResource("Icons/1.png"));
+                diceButtons[i].setIcon(new ImageIcon(img));}
+            catch (IOException ex){
+
+            }
+            diceButtons[i].setMaximumSize(new Dimension(100,100));
             diceBase.add(diceButtons[i]);
             diceButtons[i].addActionListener(ae ->{
                 //still need to add function
             });
         }
-        //load the Textures for the dice sides
-        diceSides=new ImageIcon[12];
-        for(int i=0;i<12;i++){
-            String tempString="D:\\Schule\\Info\\Kniffel\\src\\Icons"+i+".png";
-            diceSides[i]=new ImageIcon(tempString,"this is a test");
-        }
+        diceBase.setSize(500,150);
         //create and add a Button for rerolling
         rerollButton=new JButton("Reroll!");
         rerollButton.addActionListener(ae -> {
