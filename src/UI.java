@@ -1,6 +1,5 @@
 import javax.swing.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import java.awt.*;
 import java.util.ArrayList;
 
 /**
@@ -9,20 +8,21 @@ import java.util.ArrayList;
 public class UI {
 
     //all visible GUI display elements
-    JFrame frame;
-    JButton rerollButton;
-    JTable resultTable;
-    JButton confirmSelection;
+    private JFrame frame;
+    private JButton[] diceButtons;
+    private JButton rerollButton;
+    private JTable resultTable;
+    private JButton confirmSelection;
+    private ImageIcon[] diceSides;
 
     //all invisible GUI display elements
-    JPanel base;
-    JPanel diceBase;
-    JPanel[] individualDiceBase;
-    JPanel tableBase;
+    private JPanel base;
+    private JPanel diceBase;
+    private JPanel tableBase;
 
     //all background elements
-    Calc calc;
-    int playerCount;
+    private Calc calc;
+    private int playerCount;
 
     public UI(Calc calc){
         this.calc=calc;
@@ -45,12 +45,21 @@ public class UI {
         diceBase=new JPanel();
         diceBase.setLayout(new BoxLayout(diceBase, BoxLayout.X_AXIS));
         base.add(diceBase);
-        //create and add the panel for every singular dice
-        individualDiceBase = new  JPanel[5];
-        for (int i=0;i<5;i++){
-            individualDiceBase[i]=new JPanel();
-            individualDiceBase[i].setLayout(new BoxLayout(individualDiceBase[i],BoxLayout.Y_AXIS));
-            base.add(individualDiceBase[i]);
+        //create and add the button for every singular dice
+        diceButtons=new JButton[5];
+        for (int i=0;i<4;i++){
+            diceButtons[i]=new JButton();
+            diceButtons[i].setIcon(diceSides[1]);
+            diceBase.add(diceButtons[i]);
+            diceButtons[i].addActionListener(ae ->{
+                //still need to add function
+            });
+        }
+        //load the Textures for the dice sides
+        diceSides=new ImageIcon[12];
+        for(int i=0;i<12;i++){
+            String tempString="D:\\Schule\\Info\\Kniffel\\src\\Icons"+i+".png";
+            diceSides[i]=new ImageIcon(tempString,"this is a test");
         }
         //create and add a Button for rerolling
         rerollButton=new JButton("Reroll!");
