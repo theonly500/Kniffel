@@ -24,9 +24,20 @@ public class UI {
     //all background elements
     private Calc calc;
     private int playerCount;
+    private Image[] imageNr;
+    private boolean[] rerollDice;
+    private int[] diceResult;
 
     public UI(Calc calc){
+        //implement calc
         this.calc=calc;
+        //create the arrays for the dices
+        rerollDice=new boolean[5];
+        diceResult=new int[5];
+        for (int i=0;i<5;i++){
+            rerollDice[i]=false;
+            diceResult[i]=calc.rollDice();
+        }
     }
 
     public void start(ArrayList<String> names){
@@ -46,27 +57,56 @@ public class UI {
         diceBase=new JPanel();
         diceBase.setLayout(new BoxLayout(diceBase, BoxLayout.X_AXIS));
         base.add(diceBase);
+        //load all Images
+        imageNr=new Image[12];
+        for (int i=0;i<12;i++){
+            int tmpNr=i+1;
+            String tempFilepath=new String("Icons/"+tmpNr+".png");
+            try {
+                Image imageTemp = ImageIO.read(getClass().getResource(tempFilepath));
+                imageNr[i]=imageTemp.getScaledInstance(100,100,Image.SCALE_FAST);
+            }
+            catch (IOException ioE){
+
+            }
+        }
         //create and add the button for every singular dice
         diceButtons=new JButton[5];
         for (int i=0;i<5;i++){
+            //declare a final int for the ActionListener
+            final int tempNr=i;
+            //create a new Button
             diceButtons[i]=new JButton();
-            try {
-                Image img= ImageIO.read(getClass().getResource("Icons/1.png"));
-                diceButtons[i].setIcon(new ImageIcon(img));}
-            catch (IOException ex){
-
-            }
+            //set the Button to correct Size
             diceButtons[i].setMaximumSize(new Dimension(100,100));
+            //load in the first image
+            diceButtons[i].setIcon(giveImageIcon(diceResult[i]));
+            diceButtons[i].updateUI();
+            //add the Dice to the Panel witch is nesting all Buttons for the Dices
             diceBase.add(diceButtons[i]);
             diceButtons[i].addActionListener(ae ->{
-                //still need to add function
+                //swaps the Pictures corespondingly to the Number
+                if(!rerollDice[tempNr]){
+                    diceButtons[tempNr].setIcon(giveImageIcon(diceResult[tempNr]+6));
+                    rerollDice[tempNr]=true;
+                }
+                else {
+                    diceButtons[tempNr].setIcon(giveImageIcon(diceResult[tempNr]-6));
+                    rerollDice[tempNr]=false;
+                }
             });
         }
         diceBase.setSize(500,150);
         //create and add a Button for rerolling
         rerollButton=new JButton("Reroll!");
         rerollButton.addActionListener(ae -> {
-            //still to add function here
+            for (int i=0;i<5;i++){
+                if(rerollDice[i]){
+                    diceResult[i]=calc.rollDice();
+                    diceButtons[i].setIcon(giveImageIcon(diceResult[i]));
+                    rerollDice[i]=false;
+                }
+            }
         });
         diceBase.add(rerollButton);
         //create and add a Panel for showing the results
@@ -81,5 +121,9 @@ public class UI {
         tableBase.add(confirmSelection);
         frame.pack();
         frame.setVisible(true);
+    }
+
+    private ImageIcon giveImageIcon(int imageNumber){
+        return new ImageIcon(imageNr[imageNumber]);
     }
 }
