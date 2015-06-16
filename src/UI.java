@@ -61,6 +61,7 @@ public class UI {
         imageNr=new Image[12];
         for (int i=0;i<12;i++){
             int tmpNr=i+1;
+            //create Temp filepath
             String tempFilepath=new String("Icons/"+tmpNr+".png");
             try {
                 Image imageTemp = ImageIO.read(getClass().getResource(tempFilepath));
