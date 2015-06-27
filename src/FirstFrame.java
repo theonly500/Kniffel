@@ -34,15 +34,22 @@ public class FirstFrame {
             textFields[i]=new JFormattedTextField();
             //add a FocusListener to the JFormattedTextField to make the input of text easier
             textFields[i].addFocusListener(new FocusListener() {
+                String temp;
+
                 @Override
                 public void focusGained(FocusEvent e) {
+                    temp = textFields[finalTempNr].getText();
                     textFields[finalTempNr].setText("");
                 }
 
                 @Override
                 public void focusLost(FocusEvent e) {
-                    if (textFields[finalTempNr].getText().isEmpty()) {
-                        textFields[finalTempNr].setText("Player "+finalTempContentNumber);
+                    if (textFields[finalTempNr].getText().isEmpty() && temp.contains("Player " + finalTempContentNumber)) {
+                        textFields[finalTempNr].setText("Player " + finalTempContentNumber);
+                    } else {
+                        if (!temp.contains("Player " + finalTempContentNumber)){
+                            textFields[finalTempNr].setText(temp);
+                        }
                     }
                 }
             });
@@ -85,6 +92,5 @@ public class FirstFrame {
             names.add(playerFour);
         }
         userinterface.start(names);
-        System.out.println(names);
     }
 }
