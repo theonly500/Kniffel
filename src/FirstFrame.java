@@ -92,6 +92,5 @@ public class FirstFrame {
             names.add(playerFour);
         }
         userinterface.start(names);
-        System.out.println(names);
     }
 }

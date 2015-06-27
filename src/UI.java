@@ -1,5 +1,9 @@
 import javax.imageio.ImageIO;
 import javax.swing.*;
+import javax.swing.border.Border;
+import javax.swing.event.ListSelectionListener;
+import javax.swing.event.TableModelListener;
+import javax.swing.table.*;
 import java.awt.*;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -27,6 +31,12 @@ public class UI {
     private Image[] imageNr;
     private boolean[] rerollDice;
     private int[] diceResult;
+    private int rerollCounter;
+    private int playerNumber;
+    private boolean selectionConfirmed;
+    private ArrayList<String> names;
+    private TableRenderer tableRenderer;
+    private DefaultTableModel resultTableModel;
 
     public UI(Calc calc){
         //implement calc
@@ -34,14 +44,15 @@ public class UI {
         //create the arrays for the dices
         rerollDice=new boolean[5];
         diceResult=new int[5];
-        for (int i=0;i<5;i++){
-            rerollDice[i]=false;
-            diceResult[i]=calc.rollDice();
-        }
     }
 
     public void start(ArrayList<String> names){
         playerCount=names.size();
+        this.names=names;
+        for (int i=0;i<5;i++){
+            rerollDice[i]=false;
+            diceResult[i]=calc.rollDice();
+        }
         createUI();
     }
 
@@ -92,15 +103,72 @@ public class UI {
                     rerollDice[tempNr]=true;
                 }
                 else {
-                    diceButtons[tempNr].setIcon(giveImageIcon(diceResult[tempNr]-6));
+                    diceButtons[tempNr].setIcon(giveImageIcon(diceResult[tempNr]));
                     rerollDice[tempNr]=false;
                 }
             });
         }
         diceBase.setSize(500,150);
         //create and add a Button for rerolling
-        rerollButton=new JButton("Reroll!");
-        rerollButton.addActionListener(ae -> {
+        rerollButton =new JButton("Reroll!");
+        rerollButton.addActionListener(ae -> buttonEvent());
+        diceBase.add(rerollButton);
+        //create and add a Panel for showing the results
+        tableBase=new JPanel();
+        tableBase.setLayout(new BoxLayout(tableBase, BoxLayout.Y_AXIS));
+        base.add(tableBase);
+        //create and add the JTable for showing the results
+        resultTableModel = new DefaultTableModel(18,playerCount+1) {
+            @Override
+            public Class<?> getColumnClass(int columnIndex) {
+                return String.class;
+            }
+        };
+        resultTable=new JTable(resultTableModel);
+        tableRenderer=new TableRenderer();
+        resultTable.setDefaultRenderer(String.class,tableRenderer);
+        setValues();
+        tableBase.add(resultTable);
+        //create and add a Button for the confirmation of the result
+        confirmSelection=new JButton("Confirm Selection");
+        tableBase.add(confirmSelection);
+        frame.pack();
+        frame.setVisible(true);
+        visualizeOptions();
+    }
+
+    private void setValues() {
+        resultTableModel.setValueAt("Players", 0, 0);
+        resultTableModel.setValueAt("Ones", 1, 0);
+        resultTableModel.setValueAt("Twos", 2, 0);
+        resultTableModel.setValueAt("Threes", 3, 0);
+        resultTableModel.setValueAt("Fours", 4, 0);
+        resultTableModel.setValueAt("Fives", 5, 0);
+        resultTableModel.setValueAt("Sixes", 6, 0);
+        resultTableModel.setValueAt("Sum top", 7, 0);
+        resultTableModel.setValueAt("Bonus", 8, 0);
+        resultTableModel.setValueAt("Three of a kind", 9, 0);
+        resultTableModel.setValueAt("Four of a kind", 10, 0);
+        resultTableModel.setValueAt("Full House", 11, 0);
+        resultTableModel.setValueAt("Small Straight", 12, 0);
+        resultTableModel.setValueAt("Large Straight", 13, 0);
+        resultTableModel.setValueAt("Yahtzee", 14, 0);
+        resultTableModel.setValueAt("Chance", 15, 0);
+        resultTableModel.setValueAt("Sum bottom", 16, 0);
+        resultTableModel.setValueAt("Total", 17, 0);
+        for(int i=0; i<playerCount; i++)
+        {
+            resultTableModel.setValueAt(""+names.get(i)+"", 0, i+1);
+        }
+    }
+
+    private ImageIcon giveImageIcon(int imageNumber){
+        return new ImageIcon(imageNr[imageNumber]);
+    }
+
+    private void buttonEvent(){
+        if(rerollCounter<3)
+        {
             for (int i=0;i<5;i++){
                 if(rerollDice[i]){
                     diceResult[i]=calc.rollDice();
@@ -108,23 +176,55 @@ public class UI {
                     rerollDice[i]=false;
                 }
             }
-        });
-        diceBase.add(rerollButton);
-        //create and add a Panel for showing the results
-        tableBase=new JPanel();
-        tableBase.setLayout(new BoxLayout(tableBase, BoxLayout.Y_AXIS));
-        base.add(tableBase);
-        //create and add the JTable for showing the results
-        resultTable=new JTable(18,playerCount+1);
-        tableBase.add(resultTable);
-        //create and add a Button for the confirmation of the result
-        confirmSelection=new JButton("Confirm Selection");
-        tableBase.add(confirmSelection);
-        frame.pack();
-        frame.setVisible(true);
+            rerollCounter++;
+        }
+        else
+        {
+            if(selectionConfirmed)
+            {
+                for(int i=0; i<5; i++)
+                {
+                    diceResult[i]=calc.rollDice();
+                    diceButtons[i].setIcon(giveImageIcon(diceResult[i]));
+                    rerollDice[i]=false;
+                }
+                if(playerNumber < playerCount)
+                {
+                    playerNumber++;
+                }
+                else
+                {
+                    playerNumber = 1;
+                    rerollCounter = 0;
+                }
+            }
+            else
+            {
+                JOptionPane.showMessageDialog(null,"Please confirm your selection before proceeding");
+            }
+        }
+        visualizeOptions();
+
     }
 
-    private ImageIcon giveImageIcon(int imageNumber){
-        return new ImageIcon(imageNr[imageNumber]);
+    private void visualizeOptions() {
+        ArrayList<Integer> temp;
+        temp = calc.check(diceResult);
+        System.out.println(temp);
+        for(int i=0;i<temp.size();i++)
+        {
+            int tempInt = temp.get(i);
+            System.out.println(tempInt);
+            switch(tempInt)
+            {
+                case 1:if (resultTableModel.getValueAt(1,playerNumber+1)==null||resultTableModel.getValueAt(1,playerNumber+1).toString().equals("")){
+                    resultTableModel.setValueAt("colorin",1,playerNumber+1);
+                }break;
+                case 2:if (resultTableModel.getValueAt(2,playerNumber+1)==null||resultTableModel.getValueAt(2,playerNumber+1).toString().contentEquals("")){
+                    resultTableModel.setValueAt("colorin",2,playerNumber+1);
+                                    }
+            }
+        }
     }
 }
+
