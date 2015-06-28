@@ -1,4 +1,5 @@
 import javax.imageio.ImageIO;
+
 import javax.swing.*;
 import javax.swing.border.Border;
 import javax.swing.event.ListSelectionListener;
@@ -44,6 +45,8 @@ public class UI {
         //create the arrays for the dices
         rerollDice=new boolean[5];
         diceResult=new int[5];
+        rerollCounter=1;
+        playerNumber=1;
     }
 
     public void start(ArrayList<String> names){
@@ -131,6 +134,7 @@ public class UI {
         tableBase.add(resultTable);
         //create and add a Button for the confirmation of the result
         confirmSelection=new JButton("Confirm Selection");
+        confirmSelection.addActionListener(ae ->{selectionConfirmed=true;});
         tableBase.add(confirmSelection);
         frame.pack();
         frame.setVisible(true);
@@ -158,7 +162,7 @@ public class UI {
         resultTableModel.setValueAt("Total", 17, 0);
         for(int i=0; i<playerCount; i++)
         {
-            resultTableModel.setValueAt(""+names.get(i)+"", 0, i+1);
+            resultTableModel.setValueAt(" "+names.get(i)+" ", 0, i+1);
         }
     }
 
@@ -167,7 +171,26 @@ public class UI {
     }
 
     private void buttonEvent(){
-        if(rerollCounter<3)
+        System.out.println("Beginning: "+"rerollCounter: "+rerollCounter+" playerNumber: "+playerNumber+" playerCount: "+playerCount+" selection Confirmed: "+selectionConfirmed);
+
+        if(selectionConfirmed==true&&rerollCounter<3) {
+            for (int i = 0; i < 5; i++) {
+                diceResult[i] = calc.rollDice();
+                diceButtons[i].setIcon(giveImageIcon(diceResult[i]));
+                rerollDice[i] = false;
+            }
+            if(playerNumber < playerCount)
+            {
+                playerNumber++;
+            }
+            else
+            {
+                playerNumber = 1;
+            }
+            rerollCounter = 1;
+            selectionConfirmed = false;
+        }
+        else if(rerollCounter<3)
         {
             for (int i=0;i<5;i++){
                 if(rerollDice[i]){
@@ -195,14 +218,16 @@ public class UI {
                 else
                 {
                     playerNumber = 1;
-                    rerollCounter = 0;
                 }
+                rerollCounter=1;
+                selectionConfirmed=false;
             }
             else
             {
                 JOptionPane.showMessageDialog(null,"Please confirm your selection before proceeding");
             }
         }
+        System.out.println("Ending: "+"rerollCounter: "+rerollCounter+" playerNumber: "+playerNumber+" playerCount: "+playerCount+" selection Confirmed: "+selectionConfirmed);
         visualizeOptions();
 
     }
@@ -210,20 +235,90 @@ public class UI {
     private void visualizeOptions() {
         ArrayList<Integer> temp;
         temp = calc.check(diceResult);
-        System.out.println(temp);
+        //System.out.println(temp);
         for(int i=0;i<temp.size();i++)
         {
             int tempInt = temp.get(i);
-            System.out.println(tempInt);
             switch(tempInt)
             {
-                case 1:if (resultTableModel.getValueAt(1,playerNumber+1)==null||resultTableModel.getValueAt(1,playerNumber+1).toString().equals("")){
-                    resultTableModel.setValueAt("colorin",1,playerNumber+1);
-                }break;
-                case 2:if (resultTableModel.getValueAt(2,playerNumber+1)==null||resultTableModel.getValueAt(2,playerNumber+1).toString().contentEquals("")){
-                    resultTableModel.setValueAt("colorin",2,playerNumber+1);
-                                    }
+                case 1:
+                    if (resultTableModel.getValueAt(1,playerNumber)==null||resultTableModel.getValueAt(1,playerNumber).toString().equals(" ")){
+                    resultTableModel.setValueAt("  ",1,playerNumber);
+                }
+                    break;
+                case 2:
+                    if (resultTableModel.getValueAt(2,playerNumber)==null||resultTableModel.getValueAt(2,playerNumber).toString().contentEquals(" ")){
+                    resultTableModel.setValueAt("  ",2,playerNumber);
+                }
+                    break;
+                case 3:
+                    if (resultTableModel.getValueAt(3,playerNumber)==null||resultTableModel.getValueAt(3,playerNumber).toString().contentEquals(" ")){
+                        resultTableModel.setValueAt("  ", 3, playerNumber);
+                    }
+                    break;
+                case 4:
+                    if (resultTableModel.getValueAt(4,playerNumber)==null||resultTableModel.getValueAt(4,playerNumber).toString().contentEquals(" ")){
+                        resultTableModel.setValueAt("  ", 4, playerNumber);
+                    }
+                    break;
+                case 5:
+                    if (resultTableModel.getValueAt(5,playerNumber)==null||resultTableModel.getValueAt(5,playerNumber).toString().contentEquals(" ")){
+                        resultTableModel.setValueAt("  ",5,playerNumber);
+                    }
+                    break;
+                case 6:
+                    if (resultTableModel.getValueAt(6,playerNumber)==null||resultTableModel.getValueAt(6,playerNumber).toString().contentEquals(" ")){
+                        resultTableModel.setValueAt("  ",6,playerNumber);
+                    }
+                    break;
+                case 10:
+                    if (resultTableModel.getValueAt(9,playerNumber)==null||resultTableModel.getValueAt(9,playerNumber).toString().equals(" ")){
+                        resultTableModel.setValueAt("  ",9,playerNumber);
+                    }
+                    break;
+                case 11:
+                    if (resultTableModel.getValueAt(10,playerNumber)==null||resultTableModel.getValueAt(10,playerNumber).toString().contentEquals(" ")){
+                        resultTableModel.setValueAt("  ",10,playerNumber);
+                    }
+                    break;
+                case 12:
+                    if (resultTableModel.getValueAt(11,playerNumber)==null||resultTableModel.getValueAt(11,playerNumber).toString().contentEquals(" ")){
+                        resultTableModel.setValueAt("  ", 11, playerNumber);
+                    }
+                    break;
+                case 13:
+                    if (resultTableModel.getValueAt(12,playerNumber)==null||resultTableModel.getValueAt(12,playerNumber).toString().contentEquals(" ")){
+                        resultTableModel.setValueAt("  ", 12, playerNumber);
+                    }
+                    break;
+                case 14:
+                    if (resultTableModel.getValueAt(13,playerNumber)==null||resultTableModel.getValueAt(13,playerNumber).toString().contentEquals(" ")){
+                        resultTableModel.setValueAt("  ",13,playerNumber);
+                    }
+                    break;
+                case 15:
+                    if (resultTableModel.getValueAt(14,playerNumber)==null||resultTableModel.getValueAt(14,playerNumber).toString().contentEquals(" ")){
+                        resultTableModel.setValueAt("  ",14,playerNumber);
+                    }
+                    break;
+                case 16:
+                    if (resultTableModel.getValueAt(15,playerNumber)==null||resultTableModel.getValueAt(15,playerNumber).toString().contentEquals(" ")){
+                        resultTableModel.setValueAt("  ",15, playerNumber);
+                    }
+                    break;
+                default:
+
             }
+        }
+        for(int i=0;i<16;i++) {
+            if (resultTableModel.getValueAt(i+1, playerNumber) != null) {
+                if (resultTableModel.getValueAt(i+1, playerNumber).toString().equals("  ") && !temp.contains(i)) {
+                    resultTableModel.setValueAt(" ", i+1, playerNumber);
+                }
+            }
+        }
+        if (resultTableModel.getValueAt(15,playerNumber)==null||resultTableModel.getValueAt(15,playerNumber).toString().contentEquals(" ")){
+            resultTableModel.setValueAt("  ",15, playerNumber);
         }
     }
 }

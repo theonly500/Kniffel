@@ -11,18 +11,13 @@ public class TableRenderer extends DefaultTableCellRenderer
         String s = "";
         if (valueAt != null) {
             s = valueAt.toString();
-        }
-
-        if(s.equalsIgnoreCase("colorin")){
-            c.setBackground(new Color(255,0,0,90));
-        }
-        else if(s.equalsIgnoreCase("decolor")&&c.getBackground()==new Color(255,0,0,90)){
             c.setBackground(new Color(255,255,255,255));
         }
-        else if(c.getBackground()==new Color(255,0,0,90)){
+
+        if(s.equalsIgnoreCase("  ")){
             c.setBackground(new Color(255,0,0,90));
         }
-        else {
+        else if(s.equalsIgnoreCase(" ")){
             c.setBackground(new Color(255,255,255,255));
         }
         return c;

@@ -111,7 +111,7 @@ public class Calc {
             //System.out.println(i);
             if(wuerfel.get(i+1)-wuerfel.get(i)==1){
                 //System.out.println("Würfel " + i + ": " + wuerfel.get(i));
-                int i5 = i+1;
+                //int i5 = i+1;
                 //System.out.println("Würfel " + i5 + ": " + wuerfel.get(i+1));
                 x++;
             }
@@ -140,6 +140,76 @@ public class Calc {
         //System.out.println("Diese Werte" + table);
 
         return table;
+    }
+
+    public void points(int rt){
+        int feld=rt;
+        wert=0;
+        //System.out.print('\u000c');
+        switch(feld){
+            //Einser
+            case 1:
+                wert=(wuerfel.lastIndexOf(1)-wuerfel.indexOf(1)+1);
+                break;
+            //Zweier
+            case 2:
+                wert=(wuerfel.lastIndexOf(2)-wuerfel.indexOf(2)+1)*2;
+                break;
+            //Dreier
+            case 3:
+                wert=(wuerfel.lastIndexOf(3)-wuerfel.indexOf(3)+1)*3;
+                break;
+            //Vierer
+            case 4:
+                wert=(wuerfel.lastIndexOf(4)-wuerfel.indexOf(4)+1)*4;
+                break;
+            //Fünfer
+            case 5:
+                wert=(wuerfel.lastIndexOf(5)-wuerfel.indexOf(5)+1)*5;
+                break;
+            //Sechser
+            case 6:
+                wert=(wuerfel.lastIndexOf(6)-wuerfel.indexOf(6)+1)*6;
+                break;
+            //Dreierpasch
+            case 10:
+                for(int i=0; i<5; i++){
+                    wert=wuerfel.get(i)+wert;
+                }
+                break;
+            //Viererpasch
+            case 11:
+                for(int i=0; i<5; i++){
+                    wert=wuerfel.get(i)+wert;
+                }
+                break;
+            //Full House
+            case 12:
+                wert=25;
+                break;
+            //Kleine Straße
+            case 13:
+                wert=30;
+                break;
+            //Große Straße
+            case 14:
+                wert=40;
+                break;
+            //Kniffel
+            case 15:
+                wert=50;
+                break;
+            //Chance
+            case 16:
+                for(int i=0; i<5; i++){
+                    wert=wuerfel.get(i)+wert;
+                }
+                break;
+            //Default
+            default:
+                break;
+        }
+        //System.out.println(wert);
     }
 
 }
