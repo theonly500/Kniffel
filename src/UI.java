@@ -34,7 +34,10 @@ public class UI {
     private int[] diceResult;
     private int rerollCounter;
     private int playerNumber;
+    private int selectedRow;
     private boolean selectionConfirmed;
+    private boolean isSelectionConfirmed;
+    private boolean hasSelectedNewRow;
     private ArrayList<String> names;
     private TableRenderer tableRenderer;
     private DefaultTableModel resultTableModel;
@@ -47,6 +50,8 @@ public class UI {
         diceResult=new int[5];
         rerollCounter=1;
         playerNumber=1;
+        selectedRow=0;
+        isSelectionConfirmed=false;
     }
 
     public void start(ArrayList<String> names){
@@ -114,7 +119,9 @@ public class UI {
         diceBase.setSize(500,150);
         //create and add a Button for rerolling
         rerollButton =new JButton("Reroll!");
-        rerollButton.addActionListener(ae -> buttonEvent());
+        rerollButton.addActionListener(ae -> {
+            rerollButtonEvent();
+        });
         diceBase.add(rerollButton);
         //create and add a Panel for showing the results
         tableBase=new JPanel();
@@ -134,7 +141,9 @@ public class UI {
         tableBase.add(resultTable);
         //create and add a Button for the confirmation of the result
         confirmSelection=new JButton("Confirm Selection");
-        confirmSelection.addActionListener(ae ->{selectionConfirmed=true;});
+        confirmSelection.addActionListener(ae ->{
+            confirmSelectionButtonEvent();
+        });
         tableBase.add(confirmSelection);
         frame.pack();
         frame.setVisible(true);
@@ -170,9 +179,8 @@ public class UI {
         return new ImageIcon(imageNr[imageNumber]);
     }
 
-    private void buttonEvent(){
-        System.out.println("Beginning: "+"rerollCounter: "+rerollCounter+" playerNumber: "+playerNumber+" playerCount: "+playerCount+" selection Confirmed: "+selectionConfirmed);
-
+    private void rerollButtonEvent(){
+        //System.out.println("Beginning: "+"rerollCounter: "+rerollCounter+" playerNumber: "+playerNumber+" playerCount: "+playerCount+" selection Confirmed: "+selectionConfirmed);
         if(selectionConfirmed==true&&rerollCounter<3) {
             for (int i = 0; i < 5; i++) {
                 diceResult[i] = calc.rollDice();
@@ -227,99 +235,92 @@ public class UI {
                 JOptionPane.showMessageDialog(null,"Please confirm your selection before proceeding");
             }
         }
-        System.out.println("Ending: "+"rerollCounter: "+rerollCounter+" playerNumber: "+playerNumber+" playerCount: "+playerCount+" selection Confirmed: "+selectionConfirmed);
+        //System.out.println("Ending: "+"rerollCounter: "+rerollCounter+" playerNumber: "+playerNumber+" playerCount: "+playerCount+" selection Confirmed: "+selectionConfirmed);
         visualizeOptions();
 
+    }
+
+    private void confirmSelectionButtonEvent(){
+        inputDataIntoTableModel();
+        if(isSelectionConfirmed){
+            resetMarkings();
+            isSelectionConfirmed=false;
+            selectionConfirmed=true;
+        }else{
+            confirmSelectionButtonEvent();
+        }
     }
 
     private void visualizeOptions() {
         ArrayList<Integer> temp;
         temp = calc.check(diceResult);
-        //System.out.println(temp);
-        for(int i=0;i<temp.size();i++)
+        System.out.println(temp);
+        for(int i=0;i<17;i++)
         {
-            int tempInt = temp.get(i);
-            switch(tempInt)
-            {
-                case 1:
-                    if (resultTableModel.getValueAt(1,playerNumber)==null||resultTableModel.getValueAt(1,playerNumber).toString().equals(" ")){
-                    resultTableModel.setValueAt("  ",1,playerNumber);
+            int tempInt=0;
+            if(i<7){
+                tempInt=i;
+            }
+            else {
+                tempInt=i+1;
+            }
+            if (resultTableModel.getValueAt(i, playerNumber) != null) {
+                if (resultTableModel.getValueAt(i, playerNumber).toString().equals(" ") && temp.contains(tempInt)) {
+                    resultTableModel.setValueAt("  ", i, playerNumber);
                 }
-                    break;
-                case 2:
-                    if (resultTableModel.getValueAt(2,playerNumber)==null||resultTableModel.getValueAt(2,playerNumber).toString().contentEquals(" ")){
-                    resultTableModel.setValueAt("  ",2,playerNumber);
-                }
-                    break;
-                case 3:
-                    if (resultTableModel.getValueAt(3,playerNumber)==null||resultTableModel.getValueAt(3,playerNumber).toString().contentEquals(" ")){
-                        resultTableModel.setValueAt("  ", 3, playerNumber);
-                    }
-                    break;
-                case 4:
-                    if (resultTableModel.getValueAt(4,playerNumber)==null||resultTableModel.getValueAt(4,playerNumber).toString().contentEquals(" ")){
-                        resultTableModel.setValueAt("  ", 4, playerNumber);
-                    }
-                    break;
-                case 5:
-                    if (resultTableModel.getValueAt(5,playerNumber)==null||resultTableModel.getValueAt(5,playerNumber).toString().contentEquals(" ")){
-                        resultTableModel.setValueAt("  ",5,playerNumber);
-                    }
-                    break;
-                case 6:
-                    if (resultTableModel.getValueAt(6,playerNumber)==null||resultTableModel.getValueAt(6,playerNumber).toString().contentEquals(" ")){
-                        resultTableModel.setValueAt("  ",6,playerNumber);
-                    }
-                    break;
-                case 10:
-                    if (resultTableModel.getValueAt(9,playerNumber)==null||resultTableModel.getValueAt(9,playerNumber).toString().equals(" ")){
-                        resultTableModel.setValueAt("  ",9,playerNumber);
-                    }
-                    break;
-                case 11:
-                    if (resultTableModel.getValueAt(10,playerNumber)==null||resultTableModel.getValueAt(10,playerNumber).toString().contentEquals(" ")){
-                        resultTableModel.setValueAt("  ",10,playerNumber);
-                    }
-                    break;
-                case 12:
-                    if (resultTableModel.getValueAt(11,playerNumber)==null||resultTableModel.getValueAt(11,playerNumber).toString().contentEquals(" ")){
-                        resultTableModel.setValueAt("  ", 11, playerNumber);
-                    }
-                    break;
-                case 13:
-                    if (resultTableModel.getValueAt(12,playerNumber)==null||resultTableModel.getValueAt(12,playerNumber).toString().contentEquals(" ")){
-                        resultTableModel.setValueAt("  ", 12, playerNumber);
-                    }
-                    break;
-                case 14:
-                    if (resultTableModel.getValueAt(13,playerNumber)==null||resultTableModel.getValueAt(13,playerNumber).toString().contentEquals(" ")){
-                        resultTableModel.setValueAt("  ",13,playerNumber);
-                    }
-                    break;
-                case 15:
-                    if (resultTableModel.getValueAt(14,playerNumber)==null||resultTableModel.getValueAt(14,playerNumber).toString().contentEquals(" ")){
-                        resultTableModel.setValueAt("  ",14,playerNumber);
-                    }
-                    break;
-                case 16:
-                    if (resultTableModel.getValueAt(15,playerNumber)==null||resultTableModel.getValueAt(15,playerNumber).toString().contentEquals(" ")){
-                        resultTableModel.setValueAt("  ",15, playerNumber);
-                    }
-                    break;
-                default:
-
+            }else if(temp.contains(tempInt)){
+                resultTableModel.setValueAt("  ",i,playerNumber);
             }
         }
         for(int i=0;i<16;i++) {
-            if (resultTableModel.getValueAt(i+1, playerNumber) != null) {
-                if (resultTableModel.getValueAt(i+1, playerNumber).toString().equals("  ") && !temp.contains(i)) {
-                    resultTableModel.setValueAt(" ", i+1, playerNumber);
+            int tempInt=0;
+            if(i<7){
+                tempInt=i;
+            }
+            else {
+                tempInt=i+1;
+            }
+            if (resultTableModel.getValueAt(i, playerNumber) != null) {
+                if (resultTableModel.getValueAt(i, playerNumber).toString().equals("  ") && !temp.contains(tempInt)) {
+                    resultTableModel.setValueAt(" ", i, playerNumber);
                 }
             }
         }
         if (resultTableModel.getValueAt(15,playerNumber)==null||resultTableModel.getValueAt(15,playerNumber).toString().contentEquals(" ")){
             resultTableModel.setValueAt("  ",15, playerNumber);
         }
+    }
+
+    private void resetMarkings(){
+        for(int y=0;y<18;y++){
+            for(int x=0;x<=playerCount;x++){
+                if(resultTableModel.getValueAt(y,x)!=null){
+                    if(resultTableModel.getValueAt(y,x).equals("  ")){
+                        resultTableModel.setValueAt(" ",y,x);
+                    }
+                }
+                else {
+                    resultTableModel.setValueAt(" ",y,x);
+                }
+            }
+        }
+    }
+
+    private void inputDataIntoTableModel(){
+        int tempInt = resultTable.getSelectedRow();
+        if(selectedRow!=tempInt) {
+            if (1 <= tempInt && tempInt <= 6) {
+                resultTableModel.setValueAt(calc.points(tempInt), tempInt, playerNumber);
+                isSelectionConfirmed = true;
+            } else if (9 <= tempInt && tempInt <= 16) {
+                resultTableModel.setValueAt(calc.points(tempInt + 1), tempInt, playerNumber);
+                isSelectionConfirmed = true;
+            } else {
+                JOptionPane.showMessageDialog(null, "Please choose a proper Line");
+                isSelectionConfirmed = false;
+            }
+        }
+        selectedRow=tempInt;
     }
 }
 

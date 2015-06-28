@@ -142,73 +142,100 @@ public class Calc {
         return table;
     }
 
-    public void points(int rt){
+    public int points(int rt){
         int feld=rt;
         wert=0;
         //System.out.print('\u000c');
         switch(feld){
             //Einser
             case 1:
-                wert=(wuerfel.lastIndexOf(1)-wuerfel.indexOf(1)+1);
+                if(table.contains(1)) {
+                    wert = (wuerfel.lastIndexOf(1) - wuerfel.indexOf(1) + 1);
+                }else{wert=0;}
                 break;
             //Zweier
             case 2:
+                if(table.contains(2)) {
                 wert=(wuerfel.lastIndexOf(2)-wuerfel.indexOf(2)+1)*2;
+                }else{wert=0;}
                 break;
             //Dreier
             case 3:
+                if(table.contains(3)) {
                 wert=(wuerfel.lastIndexOf(3)-wuerfel.indexOf(3)+1)*3;
+                }else{wert=0;}
                 break;
             //Vierer
             case 4:
+                if(table.contains(4)) {
                 wert=(wuerfel.lastIndexOf(4)-wuerfel.indexOf(4)+1)*4;
+                }else{wert=0;}
                 break;
             //Fünfer
             case 5:
+                if(table.contains(5)) {
                 wert=(wuerfel.lastIndexOf(5)-wuerfel.indexOf(5)+1)*5;
+                }else{wert=0;}
                 break;
             //Sechser
             case 6:
+                if(table.contains(6)) {
                 wert=(wuerfel.lastIndexOf(6)-wuerfel.indexOf(6)+1)*6;
+                }else{wert=0;}
                 break;
             //Dreierpasch
             case 10:
+                if(table.contains(10)) {
                 for(int i=0; i<5; i++){
                     wert=wuerfel.get(i)+wert;
                 }
+                }else{wert=0;}
                 break;
             //Viererpasch
             case 11:
+                if(table.contains(11)) {
                 for(int i=0; i<5; i++){
                     wert=wuerfel.get(i)+wert;
                 }
+                }else{wert=0;}
                 break;
             //Full House
             case 12:
+                if(table.contains(12)) {
                 wert=25;
+                }else{wert=0;}
                 break;
             //Kleine Straße
             case 13:
+                if(table.contains(13)) {
                 wert=30;
+                }else{wert=0;}
                 break;
             //Große Straße
             case 14:
+                if(table.contains(14)) {
                 wert=40;
+                }else{wert=0;}
                 break;
             //Kniffel
             case 15:
+                if(table.contains(15)) {
                 wert=50;
+                }else{wert=0;}
                 break;
             //Chance
             case 16:
+                if(table.contains(16)) {
                 for(int i=0; i<5; i++){
                     wert=wuerfel.get(i)+wert;
                 }
+                }else{wert=0;}
                 break;
             //Default
             default:
                 break;
         }
+        return wert;
         //System.out.println(wert);
     }
 
