@@ -24,7 +24,7 @@ public class Calc {
     }
 
     public ArrayList<Integer> check(int[] results){
-
+        x=0;
         System.out.print('\u000c');
         wuerfel.clear();
         table.clear();
@@ -70,7 +70,7 @@ public class Calc {
         }
 
         //Dreierpasch
-        for(int i= 0; i<=4; i++){
+        for(int i= 0; i<=6; i++){
             if(wuerfel.lastIndexOf(i)-wuerfel.indexOf(i)+1 >=3 && !table.contains(10)){
                 table.add(10);
             }
@@ -80,7 +80,7 @@ public class Calc {
         }
 
         //Viererpasch
-        for(int i= 0; i<=4; i++){
+        for(int i= 0; i<=6; i++){
             if(wuerfel.lastIndexOf(i)-wuerfel.indexOf(i)+1 >=4 && !table.contains(10)){
                 table.add(11);
             }
@@ -90,9 +90,9 @@ public class Calc {
         }
 
         //Full House
-        for(int i= 0; i<=4; i++){
+        for(int i= 0; i<=6; i++){
             //System.out.println("i: "+ i);
-            for(int i2=0; i2<=4; i2++){
+            for(int i2=0; i2<=6; i2++){
                 //System.out.println("i2: "+ i2);
 
                 if(wuerfel.lastIndexOf(i)-wuerfel.indexOf(i)+1 ==3 && wuerfel.lastIndexOf(i2)-wuerfel.indexOf(i2)+1 == 2 && !table.contains(12) && i2!=i){
@@ -107,8 +107,9 @@ public class Calc {
         }
 
         //Straßen
-        for(int i=0; i<=3; i++){
+        //for(int i=0; i<=3; i++){
             //System.out.println(i);
+            /**
             if(wuerfel.get(i+1)-wuerfel.get(i)==1){
                 //System.out.println("Würfel " + i + ": " + wuerfel.get(i));
                 //int i5 = i+1;
@@ -122,7 +123,23 @@ public class Calc {
                 table.add(14);
             }
             //System.out.println("x: " +x);
-        }
+            */
+            if(wuerfel.contains(1)&&wuerfel.contains(2)&&wuerfel.contains(3)&&wuerfel.contains(4)&&wuerfel.contains(5)||
+                    wuerfel.contains(6)&&wuerfel.contains(2)&&wuerfel.contains(3)&&wuerfel.contains(4)&&wuerfel.contains(5)){
+                if(!table.contains(14)){
+                    table.add(14);
+                }
+            }
+            if(wuerfel.contains(1)&&wuerfel.contains(2)&&wuerfel.contains(3)
+                    ||wuerfel.contains(4)&&wuerfel.contains(2)&&wuerfel.contains(3)
+                    ||wuerfel.contains(5)&&wuerfel.contains(4)&&wuerfel.contains(3)
+                    ||wuerfel.contains(3)&&wuerfel.contains(4)&&wuerfel.contains(5)){
+                if(!table.contains(13)){
+                    table.add(13);
+                }
+            }
+
+        //}
 
         //Kniffel
         if(wuerfel.get(0)==wuerfel.get(4)&& !table.contains(15)){

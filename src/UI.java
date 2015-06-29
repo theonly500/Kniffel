@@ -1,17 +1,15 @@
+import TableComponents.TableRenderer;
+
 import javax.imageio.ImageIO;
 
 import javax.swing.*;
-import javax.swing.border.Border;
-import javax.swing.event.ListSelectionListener;
-import javax.swing.event.TableModelListener;
+import javax.swing.event.CellEditorListener;
 import javax.swing.table.*;
 import java.awt.*;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.EventObject;
 
-/**
- * Created by Felix on 11.06.2015.
- */
 public class UI {
 
     //all visible GUI display elements
@@ -62,6 +60,8 @@ public class UI {
             diceResult[i]=calc.rollDice();
         }
         createUI();
+        setupBackgroundColor();
+        totalSum();
     }
 
     private void createUI(){
@@ -136,8 +136,50 @@ public class UI {
         };
         resultTable=new JTable(resultTableModel);
         tableRenderer=new TableRenderer();
-        resultTable.setDefaultRenderer(String.class,tableRenderer);
+        resultTable.setDefaultRenderer(String.class, tableRenderer);
         setValues();
+        TableCellEditor tableCellEditor=new TableCellEditor() {
+            @Override
+            public Component getTableCellEditorComponent(JTable table, Object value, boolean isSelected, int row, int column) {
+                return null;
+            }
+
+            @Override
+            public Object getCellEditorValue() {
+                return null;
+            }
+
+            @Override
+            public boolean isCellEditable(EventObject anEvent) {
+                return false;
+            }
+
+            @Override
+            public boolean shouldSelectCell(EventObject anEvent) {
+                return false;
+            }
+
+            @Override
+            public boolean stopCellEditing() {
+                return false;
+            }
+
+            @Override
+            public void cancelCellEditing() {
+
+            }
+
+            @Override
+            public void addCellEditorListener(CellEditorListener l) {
+
+            }
+
+            @Override
+            public void removeCellEditorListener(CellEditorListener l) {
+
+            }
+        };
+        resultTable.setDefaultEditor(String.class,tableCellEditor);
         tableBase.add(resultTable);
         //create and add a Button for the confirmation of the result
         confirmSelection=new JButton("Confirm Selection");
@@ -181,7 +223,7 @@ public class UI {
 
     private void rerollButtonEvent(){
         //System.out.println("Beginning: "+"rerollCounter: "+rerollCounter+" playerNumber: "+playerNumber+" playerCount: "+playerCount+" selection Confirmed: "+selectionConfirmed);
-        if(selectionConfirmed==true&&rerollCounter<3) {
+        if(selectionConfirmed&&rerollCounter<3) {
             for (int i = 0; i < 5; i++) {
                 diceResult[i] = calc.rollDice();
                 diceButtons[i].setIcon(giveImageIcon(diceResult[i]));
@@ -246,9 +288,8 @@ public class UI {
             resetMarkings();
             isSelectionConfirmed=false;
             selectionConfirmed=true;
-        }else{
-            confirmSelectionButtonEvent();
         }
+        totalSum();
     }
 
     private void visualizeOptions() {
@@ -308,7 +349,6 @@ public class UI {
 
     private void inputDataIntoTableModel(){
         int tempInt = resultTable.getSelectedRow();
-        if(selectedRow!=tempInt) {
             if (1 <= tempInt && tempInt <= 6) {
                 resultTableModel.setValueAt(calc.points(tempInt), tempInt, playerNumber);
                 isSelectionConfirmed = true;
@@ -319,8 +359,64 @@ public class UI {
                 JOptionPane.showMessageDialog(null, "Please choose a proper Line");
                 isSelectionConfirmed = false;
             }
+    }
+
+    private void setupBackgroundColor(){
+        for (int y=0;y<resultTableModel.getRowCount();y++){
+            for(int x=0;x<resultTableModel.getColumnCount();x++){
+                if(resultTableModel.getValueAt(y,x)==null){
+                    resultTableModel.setValueAt(" ",y,x);
+                }
+            }
         }
-        selectedRow=tempInt;
+    }
+
+    private void topSumAndBonus(){
+        for(int i=1;i<=playerCount;i++){
+             int tempIntForSum=0;
+             for(int y=1;y<=6;y++){
+                 try {
+                     tempIntForSum=tempIntForSum+Integer.parseInt(resultTableModel.getValueAt(y,i).toString());
+                 }catch (Exception e){
+                     resultTableModel.setValueAt(0,7,i);
+                     resultTableModel.setValueAt(0,8,i);
+                 }
+                 if(tempIntForSum>=63){
+                     resultTableModel.setValueAt(35,8,i);
+                 }
+                 else {
+                    resultTableModel.setValueAt(0,8,i);
+                 }
+                 resultTableModel.setValueAt(tempIntForSum,7,i);
+             }
+        }
+    }
+
+    private void bottomSum(){
+        for(int i=1;i<=playerCount;i++){
+            int tempIntForSum=0;
+            for(int y=9;y<=15;y++){
+                try {
+                    tempIntForSum = tempIntForSum + Integer.parseInt(resultTableModel.getValueAt(y, i).toString());
+                }
+                catch (Exception e){
+                    resultTableModel.setValueAt(0,16,i);
+                }
+            }
+            resultTableModel.setValueAt(tempIntForSum,16,i);
+        }
+    }
+
+    private void totalSum(){
+        topSumAndBonus();
+        bottomSum();
+        for(int i=1;i<=playerCount;i++){
+            try {
+                resultTableModel.setValueAt(Integer.parseInt(resultTableModel.getValueAt(16, i).toString()) + Integer.parseInt(resultTableModel.getValueAt(7, i).toString()) + Integer.parseInt(resultTableModel.getValueAt(8, i).toString()), 17, i);
+            }catch (Exception e){
+                resultTableModel.setValueAt("0",17,i);
+            }
+        }
     }
 }
 
