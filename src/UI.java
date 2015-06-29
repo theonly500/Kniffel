@@ -246,8 +246,6 @@ public class UI {
             resetMarkings();
             isSelectionConfirmed=false;
             selectionConfirmed=true;
-        }else{
-            confirmSelectionButtonEvent();
         }
     }
 
@@ -308,7 +306,6 @@ public class UI {
 
     private void inputDataIntoTableModel(){
         int tempInt = resultTable.getSelectedRow();
-        if(selectedRow!=tempInt) {
             if (1 <= tempInt && tempInt <= 6) {
                 resultTableModel.setValueAt(calc.points(tempInt), tempInt, playerNumber);
                 isSelectionConfirmed = true;
@@ -319,8 +316,6 @@ public class UI {
                 JOptionPane.showMessageDialog(null, "Please choose a proper Line");
                 isSelectionConfirmed = false;
             }
-        }
-        selectedRow=tempInt;
     }
 }
 
