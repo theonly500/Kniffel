@@ -3,12 +3,9 @@ import java.awt.*;
 import java.awt.event.*;
 import java.util.ArrayList;
 
-/**
- * Created by Felix on 12.06.2015.
- */
-public class FirstFrame {
+class FirstFrame {
 
-    private UI userinterface;
+    private final UI userinterface;
 
     public FirstFrame(UI userinterface){
         this.userinterface=userinterface;
@@ -18,10 +15,10 @@ public class FirstFrame {
         //create and set the basics of the JPanel which contains all other GUI Elements
         JPanel base=new JPanel();
         base.setLayout(new BoxLayout(base, BoxLayout.Y_AXIS));
-        //creates and add a JLabel wich contains a brief explanation of the Namesystem
+        //creates and add a JLabel which contains a brief explanation of the Name System
         JLabel label=new JLabel("Only Fields that have been edited will be used in the Game");
         base.add(label);
-        //create, set basic properties and add a JPanel which contains the JFormattedTextFields wich are used to input the names
+        //create, set basic properties and add a JPanel which contains the JFormattedTextFields which are used to input the names
         JPanel textAreasBase=new JPanel();
         base.add(textAreasBase, BorderLayout.NORTH);
         textAreasBase.setLayout(new BoxLayout(textAreasBase,BoxLayout.X_AXIS));

@@ -10,34 +10,23 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.EventObject;
 
-public class UI {
+class UI {
 
-    //all visible GUI display elements
-    private JFrame frame;
     private JButton[] diceButtons;
-    private JButton rerollButton;
     private JTable resultTable;
-    private JButton confirmSelection;
-
-    //all invisible GUI display elements
-    private JPanel base;
-    private JPanel diceBase;
-    private JPanel tableBase;
 
     //all background elements
-    private Calc calc;
+    private final Calc calc;
     private int playerCount;
     private Image[] imageNr;
-    private boolean[] rerollDice;
-    private int[] diceResult;
+    private ImageIcon[] imageIcons;
+    private final boolean[] rerollDice;
+    private final int[] diceResult;
     private int rerollCounter;
     private int playerNumber;
-    private int selectedRow;
     private boolean selectionConfirmed;
     private boolean isSelectionConfirmed;
-    private boolean hasSelectedNewRow;
     private ArrayList<String> names;
-    private TableRenderer tableRenderer;
     private DefaultTableModel resultTableModel;
 
     public UI(Calc calc){
@@ -48,7 +37,6 @@ public class UI {
         diceResult=new int[5];
         rerollCounter=1;
         playerNumber=1;
-        selectedRow=0;
         isSelectionConfirmed=false;
     }
 
@@ -66,14 +54,14 @@ public class UI {
 
     private void createUI(){
         //create JFrame to contain every element
-        frame=new JFrame("Yahtzee");
+        JFrame frame = new JFrame("Yahtzee");
         frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         //add the base panel to the frame
-        base=new JPanel();
+        JPanel base = new JPanel();
         base.setLayout(new BoxLayout(base, BoxLayout.X_AXIS));
         frame.setContentPane(base);
         //add the panel for all dices
-        diceBase=new JPanel();
+        JPanel diceBase = new JPanel();
         diceBase.setLayout(new BoxLayout(diceBase, BoxLayout.X_AXIS));
         base.add(diceBase);
         //load all Images
@@ -81,15 +69,16 @@ public class UI {
         for (int i=0;i<12;i++){
             int tmpNr=i+1;
             //create Temp filepath
-            String tempFilepath=new String("Icons/"+tmpNr+".png");
+            String tempFilepath= "Icons/" + tmpNr + ".png";
             try {
                 Image imageTemp = ImageIO.read(getClass().getResource(tempFilepath));
                 imageNr[i]=imageTemp.getScaledInstance(100,100,Image.SCALE_FAST);
             }
-            catch (IOException ioE){
+            catch (IOException ignored){
 
             }
         }
+        setUpImageIcons();
         //create and add the button for every singular dice
         diceButtons=new JButton[5];
         for (int i=0;i<5;i++){
@@ -116,15 +105,13 @@ public class UI {
                 }
             });
         }
-        diceBase.setSize(500,150);
+        diceBase.setSize(500, 150);
         //create and add a Button for rerolling
-        rerollButton =new JButton("Reroll!");
-        rerollButton.addActionListener(ae -> {
-            rerollButtonEvent();
-        });
+        JButton rerollButton = new JButton("Reroll!");
+        rerollButton.addActionListener(ae -> rerollButtonEvent());
         diceBase.add(rerollButton);
         //create and add a Panel for showing the results
-        tableBase=new JPanel();
+        JPanel tableBase = new JPanel();
         tableBase.setLayout(new BoxLayout(tableBase, BoxLayout.Y_AXIS));
         base.add(tableBase);
         //create and add the JTable for showing the results
@@ -135,7 +122,7 @@ public class UI {
             }
         };
         resultTable=new JTable(resultTableModel);
-        tableRenderer=new TableRenderer();
+        TableRenderer tableRenderer = new TableRenderer();
         resultTable.setDefaultRenderer(String.class, tableRenderer);
         setValues();
         TableCellEditor tableCellEditor=new TableCellEditor() {
@@ -182,10 +169,8 @@ public class UI {
         resultTable.setDefaultEditor(String.class,tableCellEditor);
         tableBase.add(resultTable);
         //create and add a Button for the confirmation of the result
-        confirmSelection=new JButton("Confirm Selection");
-        confirmSelection.addActionListener(ae ->{
-            confirmSelectionButtonEvent();
-        });
+        JButton confirmSelection = new JButton("Confirm Selection");
+        confirmSelection.addActionListener(ae -> confirmSelectionButtonEvent());
         tableBase.add(confirmSelection);
         frame.pack();
         frame.setVisible(true);
@@ -217,8 +202,15 @@ public class UI {
         }
     }
 
+    private void setUpImageIcons(){
+        imageIcons=new ImageIcon[12];
+        for(int i=0;i<imageNr.length;i++){
+            imageIcons[i]=new ImageIcon(imageNr[i]);
+        }
+    }
+
     private ImageIcon giveImageIcon(int imageNumber){
-        return new ImageIcon(imageNr[imageNumber]);
+        return imageIcons[imageNumber];
     }
 
     private void rerollButtonEvent(){
@@ -298,7 +290,7 @@ public class UI {
         System.out.println(temp);
         for(int i=0;i<17;i++)
         {
-            int tempInt=0;
+            int tempInt;
             if(i<7){
                 tempInt=i;
             }
@@ -314,7 +306,7 @@ public class UI {
             }
         }
         for(int i=0;i<16;i++) {
-            int tempInt=0;
+            int tempInt;
             if(i<7){
                 tempInt=i;
             }

@@ -1,13 +1,6 @@
-/**
- * Created by Felix on 11.06.2015.
- */
-
-public class Startup
+@SuppressWarnings("ALL")
+class Startup
 {
-
-    public Startup()
-    {
-    }
 
     public static void main(String[] args) {
         Calc calc=new Calc();
