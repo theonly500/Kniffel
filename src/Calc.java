@@ -1,22 +1,17 @@
 import java.util.ArrayList;
+import java.util.Objects;
 import java.util.Random;
 
-/**
- * Created by Felix on 11.06.2015.
- */
-public class Calc {
+class Calc {
 
-    private Random random;
-    int temp;
-    int x=0;
-    int wert;
-    ArrayList<Integer> wuerfel;
-    ArrayList<Integer> table;
+    private final Random random;
+    private final ArrayList<Integer> wuerfel;
+    private final ArrayList<Integer> table;
 
     public Calc(){
         random=new Random();
-        table = new ArrayList<Integer>();
-        wuerfel = new ArrayList<Integer>();
+        table = new ArrayList<>();
+        wuerfel = new ArrayList<>();
     }
 
     public int rollDice(){
@@ -24,7 +19,6 @@ public class Calc {
     }
 
     public ArrayList<Integer> check(int[] results){
-        x=0;
         System.out.print('\u000c');
         wuerfel.clear();
         table.clear();
@@ -37,10 +31,10 @@ public class Calc {
         for (int i2 = 0; i2<4; i2++){
             for( int i =0; i<4; i++){
                 if(wuerfel.get(i)>wuerfel.get(i+1)){
-                    temp= wuerfel.get(i+1);
+                    int temp = wuerfel.get(i + 1);
                     //System.out.println("Temp" + i + ":" +temp);
                     wuerfel.set(i+1, wuerfel.get(i));
-                    wuerfel.set(i,temp);
+                    wuerfel.set(i, temp);
                 }
             }
         }
@@ -107,23 +101,6 @@ public class Calc {
         }
 
         //Straﬂen
-        //for(int i=0; i<=3; i++){
-            //System.out.println(i);
-            /**
-            if(wuerfel.get(i+1)-wuerfel.get(i)==1){
-                //System.out.println("W¸rfel " + i + ": " + wuerfel.get(i));
-                //int i5 = i+1;
-                //System.out.println("W¸rfel " + i5 + ": " + wuerfel.get(i+1));
-                x++;
-            }
-            if(x == 3 && !table.contains(13)){
-                table.add(13);
-            }
-            if(x == 4 && !table.contains(14)){
-                table.add(14);
-            }
-            //System.out.println("x: " +x);
-            */
             if(wuerfel.contains(1)&&wuerfel.contains(2)&&wuerfel.contains(3)&&wuerfel.contains(4)&&wuerfel.contains(5)||
                     wuerfel.contains(6)&&wuerfel.contains(2)&&wuerfel.contains(3)&&wuerfel.contains(4)&&wuerfel.contains(5)){
                 if(!table.contains(14)){
@@ -142,7 +119,7 @@ public class Calc {
         //}
 
         //Kniffel
-        if(wuerfel.get(0)==wuerfel.get(4)&& !table.contains(15)){
+        if(Objects.equals(wuerfel.get(0), wuerfel.get(4)) && !table.contains(15)){
             table.add(15);
         }
 
@@ -160,93 +137,105 @@ public class Calc {
     }
 
     public int points(int rt){
-        int feld=rt;
-        wert=0;
+        int wert = 0;
         //System.out.print('\u000c');
-        switch(feld){
+        switch(rt){
             //Einser
             case 1:
                 if(table.contains(1)) {
                     wert = (wuerfel.lastIndexOf(1) - wuerfel.indexOf(1) + 1);
-                }else{wert=0;}
+                }else{
+                    wert =0;}
                 break;
             //Zweier
             case 2:
                 if(table.contains(2)) {
-                wert=(wuerfel.lastIndexOf(2)-wuerfel.indexOf(2)+1)*2;
-                }else{wert=0;}
+                wert =(wuerfel.lastIndexOf(2)-wuerfel.indexOf(2)+1)*2;
+                }else{
+                    wert =0;}
                 break;
             //Dreier
             case 3:
                 if(table.contains(3)) {
-                wert=(wuerfel.lastIndexOf(3)-wuerfel.indexOf(3)+1)*3;
-                }else{wert=0;}
+                wert =(wuerfel.lastIndexOf(3)-wuerfel.indexOf(3)+1)*3;
+                }else{
+                    wert =0;}
                 break;
             //Vierer
             case 4:
                 if(table.contains(4)) {
-                wert=(wuerfel.lastIndexOf(4)-wuerfel.indexOf(4)+1)*4;
-                }else{wert=0;}
+                wert =(wuerfel.lastIndexOf(4)-wuerfel.indexOf(4)+1)*4;
+                }else{
+                    wert =0;}
                 break;
             //F¸nfer
             case 5:
                 if(table.contains(5)) {
-                wert=(wuerfel.lastIndexOf(5)-wuerfel.indexOf(5)+1)*5;
-                }else{wert=0;}
+                wert =(wuerfel.lastIndexOf(5)-wuerfel.indexOf(5)+1)*5;
+                }else{
+                    wert =0;}
                 break;
             //Sechser
             case 6:
                 if(table.contains(6)) {
-                wert=(wuerfel.lastIndexOf(6)-wuerfel.indexOf(6)+1)*6;
-                }else{wert=0;}
+                wert =(wuerfel.lastIndexOf(6)-wuerfel.indexOf(6)+1)*6;
+                }else{
+                    wert =0;}
                 break;
             //Dreierpasch
             case 10:
                 if(table.contains(10)) {
                 for(int i=0; i<5; i++){
-                    wert=wuerfel.get(i)+wert;
+                    wert =wuerfel.get(i)+ wert;
                 }
-                }else{wert=0;}
+                }else{
+                    wert =0;}
                 break;
             //Viererpasch
             case 11:
                 if(table.contains(11)) {
                 for(int i=0; i<5; i++){
-                    wert=wuerfel.get(i)+wert;
+                    wert =wuerfel.get(i)+ wert;
                 }
-                }else{wert=0;}
+                }else{
+                    wert =0;}
                 break;
             //Full House
             case 12:
                 if(table.contains(12)) {
-                wert=25;
-                }else{wert=0;}
+                wert =25;
+                }else{
+                    wert =0;}
                 break;
             //Kleine Straﬂe
             case 13:
                 if(table.contains(13)) {
-                wert=30;
-                }else{wert=0;}
+                wert =30;
+                }else{
+                    wert =0;}
                 break;
             //Groﬂe Straﬂe
             case 14:
                 if(table.contains(14)) {
-                wert=40;
-                }else{wert=0;}
+                wert =40;
+                }else{
+                    wert =0;}
                 break;
             //Kniffel
             case 15:
                 if(table.contains(15)) {
-                wert=50;
-                }else{wert=0;}
+                wert =50;
+                }else{
+                    wert =0;}
                 break;
             //Chance
             case 16:
                 if(table.contains(16)) {
                 for(int i=0; i<5; i++){
-                    wert=wuerfel.get(i)+wert;
+                    wert =wuerfel.get(i)+ wert;
                 }
-                }else{wert=0;}
+                }else{
+                    wert =0;}
                 break;
             //Default
             default:
