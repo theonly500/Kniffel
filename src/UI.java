@@ -1,4 +1,5 @@
 import TableComponents.TableRenderer;
+import UI.ImageHandeling.ImageIconManager;
 
 import javax.imageio.ImageIO;
 
@@ -12,6 +13,7 @@ import java.util.EventObject;
 
 class UI {
 
+    //
     private JButton[] diceButtons;
     private JTable resultTable;
 
@@ -28,10 +30,12 @@ class UI {
     private boolean isSelectionConfirmed;
     private ArrayList<String> names;
     private DefaultTableModel resultTableModel;
+    private ImageIconManager imageIconManager;
 
     public UI(Calc calc){
         //implement calc
         this.calc=calc;
+        imageIconManager=new ImageIconManager();
         //create the arrays for the dices
         rerollDice=new boolean[5];
         diceResult=new int[5];
@@ -64,21 +68,6 @@ class UI {
         JPanel diceBase = new JPanel();
         diceBase.setLayout(new BoxLayout(diceBase, BoxLayout.X_AXIS));
         base.add(diceBase);
-        //load all Images
-        imageNr=new Image[12];
-        for (int i=0;i<12;i++){
-            int tmpNr=i+1;
-            //create Temp filepath
-            String tempFilepath= "Icons/" + tmpNr + ".png";
-            try {
-                Image imageTemp = ImageIO.read(getClass().getResource(tempFilepath));
-                imageNr[i]=imageTemp.getScaledInstance(100,100,Image.SCALE_FAST);
-            }
-            catch (IOException ignored){
-
-            }
-        }
-        setUpImageIcons();
         //create and add the button for every singular dice
         diceButtons=new JButton[5];
         for (int i=0;i<5;i++){
@@ -89,18 +78,18 @@ class UI {
             //set the Button to correct Size
             diceButtons[i].setMaximumSize(new Dimension(100,100));
             //load in the first image
-            diceButtons[i].setIcon(giveImageIcon(diceResult[i]));
+            diceButtons[i].setIcon(imageIconManager.getImageIcons(diceResult[i]));
             diceButtons[i].updateUI();
             //add the Dice to the Panel witch is nesting all Buttons for the Dices
             diceBase.add(diceButtons[i]);
             diceButtons[i].addActionListener(ae ->{
                 //swaps the Pictures corespondingly to the Number
                 if(!rerollDice[tempNr]){
-                    diceButtons[tempNr].setIcon(giveImageIcon(diceResult[tempNr]+6));
+                    diceButtons[tempNr].setIcon(imageIconManager.getImageIcons(diceResult[tempNr]+6));
                     rerollDice[tempNr]=true;
                 }
                 else {
-                    diceButtons[tempNr].setIcon(giveImageIcon(diceResult[tempNr]));
+                    diceButtons[tempNr].setIcon(imageIconManager.getImageIcons(diceResult[tempNr]));
                     rerollDice[tempNr]=false;
                 }
             });
@@ -209,68 +198,51 @@ class UI {
         }
     }
 
-    private ImageIcon giveImageIcon(int imageNumber){
-        return imageIcons[imageNumber];
-    }
-
     private void rerollButtonEvent(){
         //System.out.println("Beginning: "+"rerollCounter: "+rerollCounter+" playerNumber: "+playerNumber+" playerCount: "+playerCount+" selection Confirmed: "+selectionConfirmed);
-        if(selectionConfirmed&&rerollCounter<3) {
-            for (int i = 0; i < 5; i++) {
-                diceResult[i] = calc.rollDice();
-                diceButtons[i].setIcon(giveImageIcon(diceResult[i]));
-                rerollDice[i] = false;
-            }
-            if(playerNumber < playerCount)
-            {
-                playerNumber++;
-            }
-            else
-            {
-                playerNumber = 1;
-            }
-            rerollCounter = 1;
-            selectionConfirmed = false;
-        }
-        else if(rerollCounter<3)
-        {
-            for (int i=0;i<5;i++){
-                if(rerollDice[i]){
-                    diceResult[i]=calc.rollDice();
-                    diceButtons[i].setIcon(giveImageIcon(diceResult[i]));
-                    rerollDice[i]=false;
+            if (selectionConfirmed && rerollCounter < 3) {
+                for (int i = 0; i < 5; i++) {
+                    diceResult[i] = calc.rollDice();
+                    diceButtons[i].setIcon(imageIconManager.getImageIcons(diceResult[i]));
+                    rerollDice[i] = false;
                 }
-            }
-            rerollCounter++;
-        }
-        else
-        {
-            if(selectionConfirmed)
-            {
-                for(int i=0; i<5; i++)
-                {
-                    diceResult[i]=calc.rollDice();
-                    diceButtons[i].setIcon(giveImageIcon(diceResult[i]));
-                    rerollDice[i]=false;
-                }
-                if(playerNumber < playerCount)
-                {
+                if (playerNumber < playerCount) {
                     playerNumber++;
-                }
-                else
-                {
+                } else {
                     playerNumber = 1;
                 }
-                rerollCounter=1;
-                selectionConfirmed=false;
+                rerollCounter = 1;
+                selectionConfirmed = false;
+            } else if (rerollCounter < 3) {
+                for (int i = 0; i < 5; i++) {
+                    if (rerollDice[i]) {
+                        diceResult[i] = calc.rollDice();
+                        diceButtons[i].setIcon(imageIconManager.getImageIcons(diceResult[i]));
+                        rerollDice[i] = false;
+                    }
+                }
+                rerollCounter++;
+            } else {
+                if (selectionConfirmed) {
+                    for (int i = 0; i < 5; i++) {
+                        diceResult[i] = calc.rollDice();
+                        diceButtons[i].setIcon(imageIconManager.getImageIcons(diceResult[i]));
+                        rerollDice[i] = false;
+                    }
+                    if (playerNumber < playerCount) {
+                        playerNumber++;
+                    } else {
+                        playerNumber = 1;
+                    }
+                    rerollCounter = 1;
+                    selectionConfirmed = false;
+                } else {
+                    JOptionPane.showMessageDialog(null, "Please confirm your selection before proceeding");
+                }
             }
-            else
-            {
-                JOptionPane.showMessageDialog(null,"Please confirm your selection before proceeding");
-            }
-        }
-        //System.out.println("Ending: "+"rerollCounter: "+rerollCounter+" playerNumber: "+playerNumber+" playerCount: "+playerCount+" selection Confirmed: "+selectionConfirmed);
-        visualizeOptions();
+            //System.out.println("Ending: "+"rerollCounter: "+rerollCounter+" playerNumber: "+playerNumber+" playerCount: "+playerCount+" selection Confirmed: "+selectionConfirmed);
+            visualizeOptions();
+
 
     }
 
