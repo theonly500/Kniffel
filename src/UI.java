@@ -198,52 +198,79 @@ class UI {
         }
     }
 
+    private boolean isRerollClear(){
+        if(selectionConfirmed) {
+            return true;
+        }else if(rerollCounter<3){
+            return true;
+        }else {
+            return false;
+        }
+    }
+
+    private int getRerollType(){
+        if(selectionConfirmed){
+            return 1;
+        }else if(rerollCounter < 3){
+            return 2;
+        }else {
+            return 0;
+        }
+    }
+
+    private void rerollType1(){
+        for (int i = 0; i < 5; i++) {
+            diceResult[i] = calc.rollDice();
+            diceButtons[i].setIcon(imageIconManager.getImageIcons(diceResult[i]));
+            rerollDice[i] = false;
+        }
+        if (playerNumber < playerCount) {
+            playerNumber++;
+        } else {
+            playerNumber = 1;
+        }
+        rerollCounter = 1;
+        selectionConfirmed = false;
+    }
+
+    private void rerollType2(){
+        for (int i = 0; i < 5; i++) {
+            if (rerollDice[i]) {
+                diceResult[i] = calc.rollDice();
+                diceButtons[i].setIcon(imageIconManager.getImageIcons(diceResult[i]));
+                rerollDice[i] = false;
+            }
+        }
+        rerollCounter++;
+    }
+
+    private void rerollType0(){}
+
     private void rerollButtonEvent(){
-        //System.out.println("Beginning: "+"rerollCounter: "+rerollCounter+" playerNumber: "+playerNumber+" playerCount: "+playerCount+" selection Confirmed: "+selectionConfirmed);
-            if (selectionConfirmed && rerollCounter < 3) {
-                for (int i = 0; i < 5; i++) {
-                    diceResult[i] = calc.rollDice();
-                    diceButtons[i].setIcon(imageIconManager.getImageIcons(diceResult[i]));
-                    rerollDice[i] = false;
-                }
-                if (playerNumber < playerCount) {
-                    playerNumber++;
-                } else {
-                    playerNumber = 1;
-                }
-                rerollCounter = 1;
-                selectionConfirmed = false;
-            } else if (rerollCounter < 3) {
-                for (int i = 0; i < 5; i++) {
-                    if (rerollDice[i]) {
-                        diceResult[i] = calc.rollDice();
-                        diceButtons[i].setIcon(imageIconManager.getImageIcons(diceResult[i]));
-                        rerollDice[i] = false;
-                    }
-                }
-                rerollCounter++;
-            } else {
-                if (selectionConfirmed) {
-                    for (int i = 0; i < 5; i++) {
-                        diceResult[i] = calc.rollDice();
-                        diceButtons[i].setIcon(imageIconManager.getImageIcons(diceResult[i]));
-                        rerollDice[i] = false;
-                    }
-                    if (playerNumber < playerCount) {
-                        playerNumber++;
+        Thread rerollButtonEventThread = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    if(isRerollClear()){
+                        int tempInt = getRerollType();
+                        switch (tempInt) {
+                            case 1:rerollType1();
+                                break;
+                            case 2:rerollType2();
+                                break;
+                            default: rerollType0();
+                        }
                     } else {
-                        playerNumber = 1;
+                        JOptionPane.showMessageDialog(null, "Please confirm your selection before proceeding");
                     }
-                    rerollCounter = 1;
-                    selectionConfirmed = false;
-                } else {
-                    JOptionPane.showMessageDialog(null, "Please confirm your selection before proceeding");
+                    visualizeOptions();
+                }
+                catch (Exception e){
+
                 }
             }
-            //System.out.println("Ending: "+"rerollCounter: "+rerollCounter+" playerNumber: "+playerNumber+" playerCount: "+playerCount+" selection Confirmed: "+selectionConfirmed);
-            visualizeOptions();
-
-
+        });
+        rerollButtonEventThread.start();
     }
 
     private void confirmSelectionButtonEvent(){
