@@ -286,7 +286,7 @@ class UI {
     private void visualizeOptions() {
         ArrayList<Integer> temp;
         temp = calc.check(diceResult);
-        System.out.println(temp);
+        //System.out.println(temp);
         for(int i=0;i<17;i++)
         {
             int tempInt;
