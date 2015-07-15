@@ -1,13 +1,11 @@
+
 import TableComponents.TableRenderer;
 import UI.ImageHandeling.ImageIconManager;
-
-import javax.imageio.ImageIO;
 
 import javax.swing.*;
 import javax.swing.event.CellEditorListener;
 import javax.swing.table.*;
 import java.awt.*;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.EventObject;
 
@@ -191,13 +189,6 @@ class UI {
         }
     }
 
-    private void setUpImageIcons(){
-        imageIcons=new ImageIcon[12];
-        for(int i=0;i<imageNr.length;i++){
-            imageIcons[i]=new ImageIcon(imageNr[i]);
-        }
-    }
-
     private boolean isRerollClear(){
         if(selectionConfirmed) {
             return true;
@@ -250,6 +241,7 @@ class UI {
         Thread rerollButtonEventThread = new Thread(new Runnable() {
             @Override
             public void run() {
+                visualizeOptions();
                 try {
                     if(isRerollClear()){
                         int tempInt = getRerollType();
@@ -263,10 +255,8 @@ class UI {
                     } else {
                         JOptionPane.showMessageDialog(null, "Please confirm your selection before proceeding");
                     }
-                    visualizeOptions();
                 }
                 catch (Exception e){
-
                 }
             }
         });
@@ -274,16 +264,27 @@ class UI {
     }
 
     private void confirmSelectionButtonEvent(){
-        inputDataIntoTableModel();
-        if(isSelectionConfirmed){
-            resetMarkings();
-            isSelectionConfirmed=false;
-            selectionConfirmed=true;
-        }
-        totalSum();
+        Thread confirmSelectionButtonEventThread = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                inputDataIntoTableModel();
+                if(isSelectionConfirmed){
+                    resetMarkings();
+                    isSelectionConfirmed=false;
+                    selectionConfirmed=true;
+                }
+                totalSum();
+            }
+        });
+        confirmSelectionButtonEventThread.start();
     }
 
     private void visualizeOptions() {
+        Thread visualizeOptionsThread=new Thread(new Runnable() {
+            @Override
+            public void run() {
+
+
         ArrayList<Integer> temp;
         temp = calc.check(diceResult);
         //System.out.println(temp);
@@ -321,6 +322,9 @@ class UI {
         if (resultTableModel.getValueAt(15,playerNumber)==null||resultTableModel.getValueAt(15,playerNumber).toString().contentEquals(" ")){
             resultTableModel.setValueAt("  ",15, playerNumber);
         }
+            }
+        });
+        visualizeOptionsThread.start();
     }
 
     private void resetMarkings(){

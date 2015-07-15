@@ -84,7 +84,7 @@ class Calc {
         }
 
         //Full House
-        for(int i= 0; i<=6; i++){
+        /**for(int i= 0; i<=6; i++){
             //System.out.println("i: "+ i);
             for(int i2=0; i2<=6; i2++){
                 //System.out.println("i2: "+ i2);
@@ -98,22 +98,31 @@ class Calc {
                     i2 = 5;
                 }
             }
+        }*/
+        ArrayList<Integer> possibleNumbers=new ArrayList<>();
+        int numberOfAppearance=1;
+        for (int i=0;i<5;i++){
+            if(!possibleNumbers.contains(wuerfel.get(i))){
+                possibleNumbers.add(wuerfel.get(i));
+            }else if(possibleNumbers.get(0)==wuerfel.get(i)){
+                numberOfAppearance++;
+                System.out.println(numberOfAppearance);
+            }
         }
-
+        if(possibleNumbers.size()==2 && (numberOfAppearance==2||numberOfAppearance==3)){
+            table.add(12);
+        }
+        possibleNumbers.clear();
         //Straßen
             if(wuerfel.contains(1)&&wuerfel.contains(2)&&wuerfel.contains(3)&&wuerfel.contains(4)&&wuerfel.contains(5)||
                     wuerfel.contains(6)&&wuerfel.contains(2)&&wuerfel.contains(3)&&wuerfel.contains(4)&&wuerfel.contains(5)){
-                if(!table.contains(14)){
                     table.add(14);
-                }
             }
             if(wuerfel.contains(1)&&wuerfel.contains(2)&&wuerfel.contains(3)
                     ||wuerfel.contains(4)&&wuerfel.contains(2)&&wuerfel.contains(3)
                     ||wuerfel.contains(5)&&wuerfel.contains(4)&&wuerfel.contains(3)
                     ||wuerfel.contains(3)&&wuerfel.contains(4)&&wuerfel.contains(5)){
-                if(!table.contains(13)){
                     table.add(13);
-                }
             }
 
         //}
