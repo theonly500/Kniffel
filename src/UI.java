@@ -1,4 +1,5 @@
 
+import TableComponents.TableData;
 import TableComponents.TableRenderer;
 import UI.ImageHandeling.ImageIconManager;
 
@@ -11,22 +12,32 @@ import java.util.EventObject;
 
 class UI {
 
-    //
+    //Directly Visible UI Elements
+    //Buttons which contain the dices
     private JButton[] diceButtons;
-    private JTable resultTable;
+    //Table which contains the Data
+    private TableData tableData;
 
     //all background elements
+    //Calc class which runs all the checks for Results
     private final Calc calc;
+    //Integer which contains the Number of Players playing
     private int playerCount;
-    private Image[] imageNr;
-    private ImageIcon[] imageIcons;
+    //Boolean Array which contains information for each dice to check if they get rerolled
     private final boolean[] rerollDice;
+    //Integer Array which contains information of the side of each dice
     private final int[] diceResult;
+    //Integer which shows the amount of rerolls a Player has done
     private int rerollCounter;
+    //Integer which shows which player is active right now
     private int playerNumber;
+    //Boolean which is used in the checking of the reroll
     private boolean selectionConfirmed;
+    //Boolean which is used in the checking of the reroll
     private boolean isSelectionConfirmed;
+    //String ArrayList which contains the name of every player
     private ArrayList<String> names;
+
     private DefaultTableModel resultTableModel;
     private ImageIconManager imageIconManager;
 
@@ -285,43 +296,40 @@ class UI {
             public void run() {
 
 
-        ArrayList<Integer> temp;
-        temp = calc.check(diceResult);
-        //System.out.println(temp);
-        for(int i=0;i<17;i++)
-        {
-            int tempInt;
-            if(i<7){
-                tempInt=i;
-            }
-            else {
-                tempInt=i+1;
-            }
-            if (resultTableModel.getValueAt(i, playerNumber) != null) {
-                if (resultTableModel.getValueAt(i, playerNumber).toString().equals(" ") && temp.contains(tempInt)) {
-                    resultTableModel.setValueAt("  ", i, playerNumber);
+                ArrayList<Integer> temp;
+                temp = calc.check(diceResult);
+                //System.out.println(temp);
+                for (int i = 0; i < 17; i++) {
+                    int tempInt = 0;
+                    if (i < 7) {
+                        tempInt = i;
+                    } else {
+                        tempInt = i + 1;
+                    }
+                    if (tableData.returnValueAt(i, playerNumber) != null) {
+                        if (tableData.returnValueAt(i, playerNumber).equals(" ") && temp.contains(tempInt)) {
+                            tableData.setValueAt("  ", i, playerNumber);
+                        }
+                    } else if (temp.contains(tempInt)) {
+                        tableData.setValueAt("  ", i, playerNumber);
+                    }
                 }
-            }else if(temp.contains(tempInt)){
-                resultTableModel.setValueAt("  ",i,playerNumber);
-            }
-        }
-        for(int i=0;i<16;i++) {
-            int tempInt;
-            if(i<7){
-                tempInt=i;
-            }
-            else {
-                tempInt=i+1;
-            }
-            if (resultTableModel.getValueAt(i, playerNumber) != null) {
-                if (resultTableModel.getValueAt(i, playerNumber).toString().equals("  ") && !temp.contains(tempInt)) {
-                    resultTableModel.setValueAt(" ", i, playerNumber);
+                for (int i = 0; i < 16; i++) {
+                    int tempInt = 0;
+                    if (i < 7) {
+                        tempInt = i;
+                    } else {
+                        tempInt = i + 1;
+                    }
+                    if (tableData.returnValueAt(i, playerNumber) != null) {
+                        if (tableData.returnValueAt(i, playerNumber).equals("  ") && !temp.contains(tempInt)) {
+                            tableData.setValueAt(" ", i, playerNumber);
+                        }
+                    }
                 }
-            }
-        }
-        if (resultTableModel.getValueAt(15,playerNumber)==null||resultTableModel.getValueAt(15,playerNumber).toString().contentEquals(" ")){
-            resultTableModel.setValueAt("  ",15, playerNumber);
-        }
+                if (tableData.returnValueAt(15, playerNumber) == null || tableData.returnValueAt(15, playerNumber).contentEquals(" ")) {
+                    tableData.setValueAt("  ", 15, playerNumber);
+                }
             }
         });
         visualizeOptionsThread.start();
@@ -330,37 +338,37 @@ class UI {
     private void resetMarkings(){
         for(int y=0;y<18;y++){
             for(int x=0;x<=playerCount;x++){
-                if(resultTableModel.getValueAt(y,x)!=null){
-                    if(resultTableModel.getValueAt(y,x).equals("  ")){
-                        resultTableModel.setValueAt(" ",y,x);
+                if(tableData.returnValueAt(y,x)!=null){
+                    if(tableData.returnValueAt(y,x).equals("  ")){
+                        tableData.setValueAt(" ",y,x);
                     }
                 }
                 else {
-                    resultTableModel.setValueAt(" ",y,x);
+                    tableData.setValueAt(" ",y,x);
                 }
             }
         }
     }
 
     private void inputDataIntoTableModel(){
-        int tempInt = resultTable.getSelectedRow();
-            if (1 <= tempInt && tempInt <= 6) {
-                resultTableModel.setValueAt(calc.points(tempInt), tempInt, playerNumber);
-                isSelectionConfirmed = true;
-            } else if (9 <= tempInt && tempInt <= 16) {
-                resultTableModel.setValueAt(calc.points(tempInt + 1), tempInt, playerNumber);
-                isSelectionConfirmed = true;
-            } else {
-                JOptionPane.showMessageDialog(null, "Please choose a proper Line");
-                isSelectionConfirmed = false;
-            }
+        int tempInt = tableData.returnTable().getSelectedRow();
+        if (1 <= tempInt && tempInt <= 6) {
+            tableData.setValueAt(""+calc.points(tempInt), tempInt, playerNumber);
+            isSelectionConfirmed = true;
+        } else if (9 <= tempInt && tempInt <= 16) {
+            tableData.setValueAt(""+calc.points(tempInt + 1), tempInt, playerNumber);
+            isSelectionConfirmed = true;
+        } else {
+            JOptionPane.showMessageDialog(null, "Please choose a proper Line");
+            isSelectionConfirmed = false;
+        }
     }
 
     private void setupBackgroundColor(){
-        for (int y=0;y<resultTableModel.getRowCount();y++){
-            for(int x=0;x<resultTableModel.getColumnCount();x++){
-                if(resultTableModel.getValueAt(y,x)==null){
-                    resultTableModel.setValueAt(" ",y,x);
+        for (int y=0;y<tableData.returnTable().getRowCount();y++){
+            for(int x=0;x<tableData.returnTable().getColumnCount();x++){
+                if(tableData.returnValueAt(y,x)==null){
+                    tableData.setValueAt(" ",y,x);
                 }
             }
         }

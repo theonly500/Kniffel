@@ -84,21 +84,6 @@ class Calc {
         }
 
         //Full House
-        /**for(int i= 0; i<=6; i++){
-            //System.out.println("i: "+ i);
-            for(int i2=0; i2<=6; i2++){
-                //System.out.println("i2: "+ i2);
-
-                if(wuerfel.lastIndexOf(i)-wuerfel.indexOf(i)+1 ==3 && wuerfel.lastIndexOf(i2)-wuerfel.indexOf(i2)+1 == 2 && !table.contains(12) && i2!=i){
-                    table.add(12);
-                }
-
-                else if(table.contains(12)){
-                    i = 5;
-                    i2 = 5;
-                }
-            }
-        }*/
         ArrayList<Integer> possibleNumbers=new ArrayList<>();
         int numberOfAppearance=1;
         for (int i=0;i<5;i++){
@@ -124,8 +109,6 @@ class Calc {
                     ||wuerfel.contains(3)&&wuerfel.contains(4)&&wuerfel.contains(5)){
                     table.add(13);
             }
-
-        //}
 
         //Kniffel
         if(Objects.equals(wuerfel.get(0), wuerfel.get(4)) && !table.contains(15)){
