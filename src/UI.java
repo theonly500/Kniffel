@@ -9,6 +9,7 @@ import javax.swing.table.*;
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.EventObject;
+import java.util.Locale;
 
 class UI {
 
@@ -41,6 +42,7 @@ class UI {
     private ImageIconManager imageIconManager;
 
     public UI(Calc calc){
+        JOptionPane.setDefaultLocale(Locale.ENGLISH);
         //implement calc
         this.calc=calc;
         imageIconManager=new ImageIconManager();
@@ -48,6 +50,7 @@ class UI {
         rerollDice=new boolean[5];
         diceResult=new int[5];
         rerollCounter=1;
+
         playerNumber=1;
         isSelectionConfirmed=false;
     }
@@ -281,7 +284,9 @@ class UI {
             }catch (IntegerFoundException e){
                 selectProperLineMessageDialog();
             }catch (IntegerNotFoundException e){
-
+                if(tableData.returnValueAt(tempInt,playerNumber).equals(" ")){
+                    crossOutMessageDialog();
+                }
             }
             tableData.setValueAt(calc.points(tempInt), tempInt, playerNumber);
             isSelectionConfirmed = true;
@@ -292,6 +297,10 @@ class UI {
             selectProperLineMessageDialog();
             isSelectionConfirmed = false;
         }
+    }
+
+    private void crossOutMessageDialog(){
+        JOptionPane.showConfirmDialog(null, "Do you want to cross out the result?","Cross-Out Confirmation",JOptionPane.YES_NO_OPTION);
     }
 
     private void selectProperLineMessageDialog(){
