@@ -1,5 +1,8 @@
 package TableComponents;
 
+import Exceptions.IntegerFoundException;
+import Exceptions.IntegerNotFoundException;
+
 import javax.swing.*;
 import javax.swing.event.CellEditorListener;
 import javax.swing.table.*;
@@ -14,8 +17,7 @@ public class TableData
     private DefaultTableModel resultTableModel;
     private ArrayList<String> names;
 
-    public TableData(int playerCount,ArrayList<String> names2)
-    {
+    public TableData(int playerCount,ArrayList<String> names2) {
         names=names2;
         setupTable(playerCount);
     }
@@ -35,6 +37,15 @@ public class TableData
         resultTableModel.setValueAt(value,y,x);
     }
 
+    public void preSetValueAt(int y,int x) throws IntegerFoundException, IntegerNotFoundException{
+        try {
+            Integer.parseInt(returnValueAt(y,x).toString());
+            throw new IntegerFoundException();
+        }catch (Exception e){
+            throw new IntegerNotFoundException(e);
+        }
+    }
+
     private void setupTable(int playerCount){
         resultTableModel = new DefaultTableModel(18,playerCount+1)
         {
@@ -46,10 +57,6 @@ public class TableData
         table=new JTable(resultTableModel);
         TableRenderer tableRenderer=new TableRenderer();
         table.setDefaultRenderer(String.class, tableRenderer);
-        names.add("test1");
-        names.add("test2");
-        names.add("test3");
-        names.add("test4");
         setValues(playerCount);
         TableCellEditor tableCellEditor=new TableCellEditor()
         {

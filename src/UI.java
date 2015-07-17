@@ -56,6 +56,7 @@ class UI {
     public void start(ArrayList<String> names){
         playerCount=names.size();
         this.names=names;
+        tableData=new TableData(playerCount,names);
         for (int i=0;i<5;i++){
             rerollDice[i]=false;
             diceResult[i]=calc.rollDice();
@@ -119,53 +120,7 @@ class UI {
                 return String.class;
             }
         };
-        resultTable=new JTable(resultTableModel);
-        TableRenderer tableRenderer = new TableRenderer();
-        resultTable.setDefaultRenderer(String.class, tableRenderer);
-        setValues();
-        TableCellEditor tableCellEditor=new TableCellEditor() {
-            @Override
-            public Component getTableCellEditorComponent(JTable table, Object value, boolean isSelected, int row, int column) {
-                return null;
-            }
-
-            @Override
-            public Object getCellEditorValue() {
-                return null;
-            }
-
-            @Override
-            public boolean isCellEditable(EventObject anEvent) {
-                return false;
-            }
-
-            @Override
-            public boolean shouldSelectCell(EventObject anEvent) {
-                return false;
-            }
-
-            @Override
-            public boolean stopCellEditing() {
-                return false;
-            }
-
-            @Override
-            public void cancelCellEditing() {
-
-            }
-
-            @Override
-            public void addCellEditorListener(CellEditorListener l) {
-
-            }
-
-            @Override
-            public void removeCellEditorListener(CellEditorListener l) {
-
-            }
-        };
-        resultTable.setDefaultEditor(String.class,tableCellEditor);
-        tableBase.add(resultTable);
+        tableBase.add(tableData.returnTable());
         //create and add a Button for the confirmation of the result
         JButton confirmSelection = new JButton("Confirm Selection");
         confirmSelection.addActionListener(ae -> confirmSelectionButtonEvent());
