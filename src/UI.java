@@ -277,30 +277,55 @@ class UI {
     }
 
     private void inputDataIntoTableModel(){
+        boolean exceptionThrown=false;
         int tempInt = tableData.returnTable().getSelectedRow();
         if (1 <= tempInt && tempInt <= 6) {
             try {
                 tableData.preSetValueAt(tempInt, playerNumber);
             }catch (IntegerFoundException e){
+                exceptionThrown=true;
                 selectProperLineMessageDialog();
             }catch (IntegerNotFoundException e){
                 if(tableData.returnValueAt(tempInt,playerNumber).equals(" ")){
-                    crossOutMessageDialog();
+                    if(crossOutMessageDialog()==JOptionPane.YES_OPTION){
+                        tableData.setValueAt(calc.points(tempInt),tempInt,playerNumber);
+                        isSelectionConfirmed = true;
+                    }else exceptionThrown=true;
+                }
+            }finally {
+                if(!exceptionThrown){
+                    tableData.setValueAt(calc.points(tempInt),tempInt,playerNumber);
+                    isSelectionConfirmed = true;
                 }
             }
-            tableData.setValueAt(calc.points(tempInt), tempInt, playerNumber);
-            isSelectionConfirmed = true;
+
         } else if (9 <= tempInt && tempInt <= 16) {
-            tableData.setValueAt(calc.points(tempInt + 1), tempInt, playerNumber);
-            isSelectionConfirmed = true;
+            try {
+                tableData.preSetValueAt(tempInt, playerNumber);
+            }catch (IntegerFoundException e){
+                exceptionThrown=true;
+                selectProperLineMessageDialog();
+            }catch (IntegerNotFoundException e){
+                if(tableData.returnValueAt(tempInt,playerNumber).equals(" ")){
+                    if(crossOutMessageDialog()==JOptionPane.YES_OPTION){
+                        tableData.setValueAt(calc.points(tempInt+1),tempInt,playerNumber);
+                        isSelectionConfirmed = true;
+                    }else exceptionThrown=true;
+                }
+            }finally {
+                if(!exceptionThrown){
+                    tableData.setValueAt(calc.points(tempInt+1),tempInt,playerNumber);
+                    isSelectionConfirmed = true;
+                }
+            }
         } else {
             selectProperLineMessageDialog();
             isSelectionConfirmed = false;
         }
     }
 
-    private void crossOutMessageDialog(){
-        JOptionPane.showConfirmDialog(null, "Do you want to cross out the result?","Cross-Out Confirmation",JOptionPane.YES_NO_OPTION);
+    private int crossOutMessageDialog(){
+        return JOptionPane.showConfirmDialog(null, "Do you want to cross out the result?","Cross-Out Confirmation",JOptionPane.YES_NO_OPTION);
     }
 
     private void selectProperLineMessageDialog(){

@@ -68,18 +68,12 @@ class Calc {
             if(wuerfel.lastIndexOf(i)-wuerfel.indexOf(i)+1 >=3 && !table.contains(10)){
                 table.add(10);
             }
-            else if(table.contains(10)){
-                i = 5;
-            }
         }
 
         //Viererpasch
         for(int i= 0; i<=6; i++){
-            if(wuerfel.lastIndexOf(i)-wuerfel.indexOf(i)+1 >=4 && !table.contains(10)){
+            if(wuerfel.lastIndexOf(i)-wuerfel.indexOf(i)+1 >=4 && !table.contains(11)){
                 table.add(11);
-            }
-            else if(table.contains(10)){
-                i = 5;
             }
         }
 
