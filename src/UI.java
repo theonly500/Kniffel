@@ -1,10 +1,10 @@
 
+import Exceptions.IntegerFoundException;
+import Exceptions.IntegerNotFoundException;
 import TableComponents.TableData;
-import TableComponents.TableRenderer;
 import UI.ImageHandeling.ImageIconManager;
 
 import javax.swing.*;
-import javax.swing.event.CellEditorListener;
 import javax.swing.table.*;
 import java.awt.*;
 import java.util.ArrayList;
@@ -37,8 +37,7 @@ class UI {
     private boolean isSelectionConfirmed;
     //String ArrayList which contains the name of every player
     private ArrayList<String> names;
-
-    private DefaultTableModel resultTableModel;
+    //ImageIconManager class which handles all Images
     private ImageIconManager imageIconManager;
 
     public UI(Calc calc){
@@ -114,12 +113,6 @@ class UI {
         tableBase.setLayout(new BoxLayout(tableBase, BoxLayout.Y_AXIS));
         base.add(tableBase);
         //create and add the JTable for showing the results
-        resultTableModel = new DefaultTableModel(18,playerCount+1) {
-            @Override
-            public Class<?> getColumnClass(int columnIndex) {
-                return String.class;
-            }
-        };
         tableBase.add(tableData.returnTable());
         //create and add a Button for the confirmation of the result
         JButton confirmSelection = new JButton("Confirm Selection");
@@ -128,31 +121,6 @@ class UI {
         frame.pack();
         frame.setVisible(true);
         visualizeOptions();
-    }
-
-    private void setValues() {
-        resultTableModel.setValueAt("Players", 0, 0);
-        resultTableModel.setValueAt("Ones", 1, 0);
-        resultTableModel.setValueAt("Twos", 2, 0);
-        resultTableModel.setValueAt("Threes", 3, 0);
-        resultTableModel.setValueAt("Fours", 4, 0);
-        resultTableModel.setValueAt("Fives", 5, 0);
-        resultTableModel.setValueAt("Sixes", 6, 0);
-        resultTableModel.setValueAt("Sum top", 7, 0);
-        resultTableModel.setValueAt("Bonus", 8, 0);
-        resultTableModel.setValueAt("Three of a kind", 9, 0);
-        resultTableModel.setValueAt("Four of a kind", 10, 0);
-        resultTableModel.setValueAt("Full House", 11, 0);
-        resultTableModel.setValueAt("Small Straight", 12, 0);
-        resultTableModel.setValueAt("Large Straight", 13, 0);
-        resultTableModel.setValueAt("Yahtzee", 14, 0);
-        resultTableModel.setValueAt("Chance", 15, 0);
-        resultTableModel.setValueAt("Sum bottom", 16, 0);
-        resultTableModel.setValueAt("Total", 17, 0);
-        for(int i=0; i<playerCount; i++)
-        {
-            resultTableModel.setValueAt(" "+names.get(i)+" ", 0, i+1);
-        }
     }
 
     private boolean isRerollClear(){
@@ -308,15 +276,26 @@ class UI {
     private void inputDataIntoTableModel(){
         int tempInt = tableData.returnTable().getSelectedRow();
         if (1 <= tempInt && tempInt <= 6) {
-            tableData.setValueAt(""+calc.points(tempInt), tempInt, playerNumber);
+            try {
+                tableData.preSetValueAt(tempInt, playerNumber);
+            }catch (IntegerFoundException e){
+                selectProperLineMessageDialog();
+            }catch (IntegerNotFoundException e){
+
+            }
+            tableData.setValueAt(calc.points(tempInt), tempInt, playerNumber);
             isSelectionConfirmed = true;
         } else if (9 <= tempInt && tempInt <= 16) {
-            tableData.setValueAt(""+calc.points(tempInt + 1), tempInt, playerNumber);
+            tableData.setValueAt(calc.points(tempInt + 1), tempInt, playerNumber);
             isSelectionConfirmed = true;
         } else {
-            JOptionPane.showMessageDialog(null, "Please choose a proper Line");
+            selectProperLineMessageDialog();
             isSelectionConfirmed = false;
         }
+    }
+
+    private void selectProperLineMessageDialog(){
+        JOptionPane.showMessageDialog(null, "Please choose a proper Line");
     }
 
     private void setupBackgroundColor(){
@@ -334,18 +313,18 @@ class UI {
              int tempIntForSum=0;
              for(int y=1;y<=6;y++){
                  try {
-                     tempIntForSum=tempIntForSum+Integer.parseInt(resultTableModel.getValueAt(y,i).toString());
+                     tempIntForSum=tempIntForSum+Integer.parseInt(tableData.returnValueAt(y, i).toString());
                  }catch (Exception e){
-                     resultTableModel.setValueAt(0,7,i);
-                     resultTableModel.setValueAt(0,8,i);
+                     tableData.setValueAt(0,7,i);
+                     tableData.setValueAt(0,8,i);
                  }
                  if(tempIntForSum>=63){
-                     resultTableModel.setValueAt(35,8,i);
+                     tableData.setValueAt(35,8,i);
                  }
                  else {
-                    resultTableModel.setValueAt(0,8,i);
+                    tableData.setValueAt(0,8,i);
                  }
-                 resultTableModel.setValueAt(tempIntForSum,7,i);
+                 tableData.setValueAt(tempIntForSum,7,i);
              }
         }
     }
@@ -355,13 +334,13 @@ class UI {
             int tempIntForSum=0;
             for(int y=9;y<=15;y++){
                 try {
-                    tempIntForSum = tempIntForSum + Integer.parseInt(resultTableModel.getValueAt(y, i).toString());
+                    tempIntForSum = tempIntForSum + Integer.parseInt(tableData.returnValueAt(y, i).toString());
                 }
                 catch (Exception e){
-                    resultTableModel.setValueAt(0,16,i);
+                    tableData.setValueAt(0,16,i);
                 }
             }
-            resultTableModel.setValueAt(tempIntForSum,16,i);
+            tableData.setValueAt(tempIntForSum,16,i);
         }
     }
 
@@ -370,9 +349,9 @@ class UI {
         bottomSum();
         for(int i=1;i<=playerCount;i++){
             try {
-                resultTableModel.setValueAt(Integer.parseInt(resultTableModel.getValueAt(16, i).toString()) + Integer.parseInt(resultTableModel.getValueAt(7, i).toString()) + Integer.parseInt(resultTableModel.getValueAt(8, i).toString()), 17, i);
+                tableData.setValueAt(Integer.parseInt(tableData.returnValueAt(16, i).toString()) + Integer.parseInt(tableData.returnValueAt(7, i).toString()) + Integer.parseInt(tableData.returnValueAt(8, i).toString()), 17, i);
             }catch (Exception e){
-                resultTableModel.setValueAt("0",17,i);
+                tableData.setValueAt(0,17,i);
             }
         }
     }

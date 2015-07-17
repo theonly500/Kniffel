@@ -33,7 +33,7 @@ public class TableData
         return null;
     }
 
-    public void setValueAt(String value,int y, int x){
+    public void setValueAt(Object value,int y, int x){
         resultTableModel.setValueAt(value,y,x);
     }
 
@@ -41,8 +41,12 @@ public class TableData
         try {
             Integer.parseInt(returnValueAt(y,x).toString());
             throw new IntegerFoundException();
-        }catch (Exception e){
-            throw new IntegerNotFoundException(e);
+        }
+        catch (IntegerFoundException ifEx){
+
+        }
+        catch (Exception e){
+            throw new IntegerNotFoundException();
         }
     }
 
