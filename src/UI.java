@@ -41,21 +41,23 @@ class UI {
     //ImageIconManager class which handles all Images
     private ImageIconManager imageIconManager;
 
+    //Constructor of Class Calc Creates all needed Objects
     public UI(Calc calc){
+        //Sets the Language for the JOptionPane Class
         JOptionPane.setDefaultLocale(Locale.ENGLISH);
-        //implement calc
+        //Sets the Reference of the Calc Class Object
         this.calc=calc;
-        imageIconManager=new ImageIconManager();
-        //create the arrays for the dices
+        //Init the Boolean Array rerollDice with null Value
         rerollDice=new boolean[5];
+        //Init the Integer Array DiceResult with null Value
         diceResult=new int[5];
-        rerollCounter=1;
-
-        playerNumber=1;
-        isSelectionConfirmed=false;
     }
 
     public void start(ArrayList<String> names){
+        imageIconManager=new ImageIconManager();
+        rerollCounter=1;
+        playerNumber=1;
+        isSelectionConfirmed=false;
         playerCount=names.size();
         this.names=names;
         tableData=new TableData(playerCount,names);
