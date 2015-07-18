@@ -45,7 +45,7 @@ public class TableData
         catch (IntegerFoundException ifEx){
 
         }
-        catch (Exception e){
+        catch (NumberFormatException nfEx){
             throw new IntegerNotFoundException();
         }
     }

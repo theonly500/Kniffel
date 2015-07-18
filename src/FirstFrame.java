@@ -26,34 +26,42 @@ class FirstFrame {
         JFormattedTextField[] textFields=new JFormattedTextField[4];
         //initialize all JFormattedTextFields
         for(int i=0;i<4;i++){
-            final int finalTempNr=i;
-            final int finalTempContentNumber=4-i;
+            final int tempInt = i;
             textFields[i]=new JFormattedTextField();
-            //add a FocusListener to the JFormattedTextField to make the input of text easier
+            textFields[i].setText("Playername");
+            textFields[i].setForeground(new Color(155, 155, 155));
             textFields[i].addFocusListener(new FocusListener() {
-                String temp;
-
                 @Override
                 public void focusGained(FocusEvent e) {
-                    temp = textFields[finalTempNr].getText();
-                    textFields[finalTempNr].setText("");
+                    if (textFields[tempInt].getText().contentEquals("Playername")) {
+                        textFields[tempInt].setText("");
+                    }else {
+                        textFields[tempInt].selectAll();
+                    }
                 }
 
                 @Override
                 public void focusLost(FocusEvent e) {
-                    if (textFields[finalTempNr].getText().isEmpty() && temp.contains("Player " + finalTempContentNumber)) {
-                        textFields[finalTempNr].setText("Player " + finalTempContentNumber);
-                    } else {
-                        if (!temp.contains("Player " + finalTempContentNumber)){
-                            textFields[finalTempNr].setText(temp);
-                        }
+                    if (textFields[tempInt].getText().contentEquals("")) {
+                        textFields[tempInt].setText("Playername");
+                        textFields[tempInt].setForeground(new Color(155, 155, 155));
                     }
+                    else{
+                        textFields[tempInt].setForeground(new Color(0,0,0));
+                    }
+                }
+            });
+            textFields[i].addKeyListener(new KeyAdapter() {
+                @Override
+                public void keyTyped(KeyEvent e) {
+                    super.keyTyped(e);
+                    textFields[tempInt].setForeground(new Color(0, 0, 0));
                 }
             });
             //add the JFormattedTextField to the textAreasBase JPanel
             textFields[i].setAlignmentX(Component.CENTER_ALIGNMENT);
             textAreasBase.add(textFields[i], BoxLayout.X_AXIS);
-            textFields[i].setText("Player "+finalTempContentNumber);
+            textFields[i].setText("Playername");
         }
         //create, set attributes and add a JButton for the confirmation of Usernames
         JButton confirm=new JButton("Confirm Selection");
@@ -76,16 +84,16 @@ class FirstFrame {
     private void startGame(String playerOne, String playerTwo, String playerThree, String playerFour){
         ArrayList<String> names=new ArrayList<>();
         //check if there was a player entered
-        if(!playerOne.contentEquals("Player 1")){
+        if(!playerOne.contentEquals("Playername")){
             names.add(playerOne);
         }
-        if(!playerTwo.contentEquals("Player 2")){
+        if(!playerTwo.contentEquals("Playername")){
             names.add(playerTwo);
         }
-        if(!playerThree.contentEquals("Player 3")){
+        if(!playerThree.contentEquals("Playername")){
             names.add(playerThree);
         }
-        if(!playerFour.contentEquals("Player 4")){
+        if(!playerFour.contentEquals("Playername")){
             names.add(playerFour);
         }
         userinterface.start(names);

@@ -329,7 +329,7 @@ class UI {
     }
 
     private void selectProperLineMessageDialog(){
-        JOptionPane.showMessageDialog(null, "Please choose a proper Line");
+        JOptionPane.showMessageDialog(null, "Please choose a proper Line","Wrong Line Selected",JOptionPane.WARNING_MESSAGE);
     }
 
     private void setupBackgroundColor(){
