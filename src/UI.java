@@ -16,7 +16,7 @@ class UI {
     //Directly Visible UI Elements
     //Buttons which contain the dices
     private JButton[] diceButtons;
-    //Table which contains the Data
+    //Class Table Data which handels the dataflow of the shown JTable
     private TableData tableData;
 
     //all background elements
@@ -41,7 +41,7 @@ class UI {
     //ImageIconManager class which handles all Images
     private ImageIconManager imageIconManager;
 
-    //Constructor of Class Calc Creates all needed Objects
+    //Constructor of Class UI Creates all needed Objects, gets Calc for reference
     public UI(Calc calc){
         //Sets the Language for the JOptionPane Class
         JOptionPane.setDefaultLocale(Locale.ENGLISH);
@@ -53,16 +53,27 @@ class UI {
         diceResult=new int[5];
     }
 
+    //Method start which starts the UI Processing, gets the ArrayList names containing all Playernames
     public void start(ArrayList<String> names){
+        //Construct an Object of Class ImageIconManager
         imageIconManager=new ImageIconManager();
+        //Init Integer rerollCounter with value 1
         rerollCounter=1;
+        //Init Integer playerNumber with value 1
         playerNumber=1;
+        //Init Boolean isSelectionConfirmed with value false
         isSelectionConfirmed=false;
+        //Init Integer playerCount with the length of the names ArrayList
         playerCount=names.size();
+        //Init Objects names ArrayList with the Method names ArrayList content
         this.names=names;
+        //Construct an Object of Class TableData
         tableData=new TableData(playerCount,names);
+        //Loop through all 5 dices
         for (int i=0;i<5;i++){
+            //Init the Boolean Array entry at i with value false
             rerollDice[i]=false;
+            //Init the Integer Array entry at i with random value, token from the Method rerollDice out of Calc class
             diceResult[i]=calc.rollDice();
         }
         createUI();
