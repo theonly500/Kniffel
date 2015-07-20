@@ -246,31 +246,35 @@ class UI {
         rerollButtonEventThread.start();
     }
 
+    //Function confirmSelectionButtonEvent is called when the confirmSelection Button was pressed.
     private void confirmSelectionButtonEvent(){
+        //Thread as above
         Thread confirmSelectionButtonEventThread = new Thread(new Runnable() {
             @Override
             public void run() {
                 inputDataIntoTableModel();
+                //resets the markings and flags
                 if(isSelectionConfirmed){
                     resetMarkings();
                     isSelectionConfirmed=false;
                     selectionConfirmed=true;
                 }
+                //calculates the sum for your character
                 totalSum();
             }
         });
+        //starts thread
         confirmSelectionButtonEventThread.start();
     }
 
+    //Function visualizeOptions gets called whenever it is needed to
     private void visualizeOptions() {
         Thread visualizeOptionsThread=new Thread(new Runnable() {
             @Override
             public void run() {
-
-
                 ArrayList<Integer> temp;
+                //get
                 temp = calc.check(diceResult);
-                //System.out.println(temp);
                 for (int i = 0; i < 17; i++) {
                     int tempInt = 0;
                     if (i < 7) {

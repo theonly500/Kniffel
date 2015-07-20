@@ -92,6 +92,7 @@ class Calc {
             table.add(12);
         }
         possibleNumbers.clear();
+
         //Straﬂen
             if(wuerfel.contains(1)&&wuerfel.contains(2)&&wuerfel.contains(3)&&wuerfel.contains(4)&&wuerfel.contains(5)||
                     wuerfel.contains(6)&&wuerfel.contains(2)&&wuerfel.contains(3)&&wuerfel.contains(4)&&wuerfel.contains(5)){
