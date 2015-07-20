@@ -273,10 +273,12 @@ class UI {
             @Override
             public void run() {
                 ArrayList<Integer> temp;
-                //get
+                //get the possible options and save them
                 temp = calc.check(diceResult);
+                //loop through the whole table
                 for (int i = 0; i < 17; i++) {
                     int tempInt = 0;
+                    //set
                     if (i < 7) {
                         tempInt = i;
                     } else {
