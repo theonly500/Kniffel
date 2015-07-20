@@ -100,28 +100,35 @@ class UI {
             final int tempNr=i;
             //create a new Button
             diceButtons[i]=new JButton();
-            //set the Button to correct Size
+            //set the Button to correct Size, here it is 100px by 100px
             diceButtons[i].setMaximumSize(new Dimension(100,100));
-            //load in the first image
+            //loads the ImageIcon into Button with index i out of class imageIconManager through Method getImageIcons whit giving it the Number which needs to be shown
             diceButtons[i].setIcon(imageIconManager.getImageIcons(diceResult[i]));
+            //updates the graphical Output of Button with index i to show the Image
             diceButtons[i].updateUI();
             //add the Dice to the Panel witch is nesting all Buttons for the Dices
             diceBase.add(diceButtons[i]);
+            //Add the ActionListener to the Button with index i, using Lambda Syntax
             diceButtons[i].addActionListener(ae ->{
                 //swaps the Pictures corespondingly to the Number
+                //If clause checks whether the rerollcondition is given
+                //If reacts while the rerollDice Array entry at tempNr is false
                 if(!rerollDice[tempNr]){
+                    //loads the ImageIcon into Button with index tempNr out of class imageIconManager through Method getImageIcons whit giving it the Number which needs to be shown
+                    //method adds 6 to the integer value of that button to load the red picture
                     diceButtons[tempNr].setIcon(imageIconManager.getImageIcons(diceResult[tempNr]+6));
                     rerollDice[tempNr]=true;
                 }
+                //Else reacts while the rerollDice Array entry at tempNr is true
                 else {
                     diceButtons[tempNr].setIcon(imageIconManager.getImageIcons(diceResult[tempNr]));
                     rerollDice[tempNr]=false;
                 }
             });
         }
-        diceBase.setSize(500, 150);
         //create and add a Button for rerolling
         JButton rerollButton = new JButton("Reroll!");
+        //add ActionListener with Lambda
         rerollButton.addActionListener(ae -> rerollButtonEvent());
         diceBase.add(rerollButton);
         //create and add a Panel for showing the results
@@ -132,13 +139,18 @@ class UI {
         tableBase.add(tableData.returnTable());
         //create and add a Button for the confirmation of the result
         JButton confirmSelection = new JButton("Confirm Selection");
+        //add ActionListener with Lambda
         confirmSelection.addActionListener(ae -> confirmSelectionButtonEvent());
         tableBase.add(confirmSelection);
+        //sets the size of the Frame to the smallest size possible
         frame.pack();
+        //set frame visible
         frame.setVisible(true);
+        //mark the possible options
         visualizeOptions();
     }
 
+    //Function is reRollClear returns a boolean based on the different states possible
     private boolean isRerollClear(){
         if(selectionConfirmed) {
             return true;
@@ -149,6 +161,10 @@ class UI {
         }
     }
 
+    //Function getRerollType returns a integer based on different states possible
+    //returns 1 for full reroll
+    //returns 2 for partial reroll
+    //returns 0 for no reroll
     private int getRerollType(){
         if(selectionConfirmed){
             return 1;
@@ -159,12 +175,15 @@ class UI {
         }
     }
 
+    //Function rerollType1 rerolls all Buttons and sets the correct number of current player
     private void rerollType1(){
+        //for loop rerolls all dices
         for (int i = 0; i < 5; i++) {
             diceResult[i] = calc.rollDice();
             diceButtons[i].setIcon(imageIconManager.getImageIcons(diceResult[i]));
             rerollDice[i] = false;
         }
+        //if cause checks for current player and if current player in list is not last player in list ads 1 to the number else sets last player in list is active to first player in list
         if (playerNumber < playerCount) {
             playerNumber++;
         } else {
@@ -174,7 +193,9 @@ class UI {
         selectionConfirmed = false;
     }
 
+    //Function rerollType2 rerolls checked Buttons
     private void rerollType2(){
+        //loops through all buttons and rerolls those with the reroll boolean == true
         for (int i = 0; i < 5; i++) {
             if (rerollDice[i]) {
                 diceResult[i] = calc.rollDice();
@@ -185,13 +206,16 @@ class UI {
         rerollCounter++;
     }
 
+    //Function rerollType0 is used as a error catcher
     private void rerollType0(){}
 
+    //Function rerollButtonEvent is called when the rerollEvent is called
     private void rerollButtonEvent(){
+        //create a new thread in order to keep the UI running
         Thread rerollButtonEventThread = new Thread(new Runnable() {
             @Override
             public void run() {
-                visualizeOptions();
+                //tries to reroll, checks if reroll is possible, then gets the type of reroll,
                 try {
                     if(isRerollClear()){
                         int tempInt = getRerollType();
@@ -202,14 +226,23 @@ class UI {
                                 break;
                             default: rerollType0();
                         }
-                    } else {
-                        JOptionPane.showMessageDialog(null, "Please confirm your selection before proceeding");
+                    }
+                    //if reroll is not clear show a
+                    else {
+                        JOptionPane.showMessageDialog(null, "Please confirm your selection before proceeding","Selection Confirmation Needed",JOptionPane.WARNING_MESSAGE);
                     }
                 }
+                //catches Exceptions which might occur
                 catch (Exception e){
+
+                }
+                //always does mark possible options
+                finally {
+                    visualizeOptions();
                 }
             }
         });
+        //starts the thread with the actions in it
         rerollButtonEventThread.start();
     }
 
