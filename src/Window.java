@@ -1,10 +1,15 @@
+import graphicManaging.BasicComponentManaging;
+
 import javax.swing.*;
 
 public class Window {
     JFrame windowFrame;
+    BasicComponentManaging basicComponentManaging;
 
     public Window(){
-       createWindow();
+        basicComponentManaging=new BasicComponentManaging();
+        createWindow();
+        windowFrame.add(basicComponentManaging.getBasePanel());
     }
 
 
@@ -12,5 +17,6 @@ public class Window {
         windowFrame=new JFrame("Kniffel");
         windowFrame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         windowFrame.setVisible(true);
+        windowFrame.setSize(1024,600);
     }
 }
