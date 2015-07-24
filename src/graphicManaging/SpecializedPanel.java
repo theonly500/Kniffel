@@ -9,7 +9,7 @@ public class SpecializedPanel extends JPanel {
 
     public static int DICEINCUP=1;
     public static int DICEINTEMP=2;
-    public static int DICEIN
+    public static int DICEINSAFSIDE=3;
 
     Graphics graphics;
 
