@@ -12,7 +12,8 @@ public class BasicComponent{
 
     public BasicComponent() {
         basePanel = new SpecializedPanel();
-
+        basePanel.addDiceToPlain(2);
+        prepareJPanel();
     }
 
     public JPanel getBasePanel() {
@@ -23,7 +24,8 @@ public class BasicComponent{
         basePanel.addMouseListener(new MouseListener() {
             @Override
             public void mouseClicked(MouseEvent e) {
-
+                basePanel.addDiceToPlain(1);
+                basePanel.repaint();
             }
 
             @Override
