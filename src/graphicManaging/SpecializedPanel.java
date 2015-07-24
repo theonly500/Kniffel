@@ -12,13 +12,17 @@ public class SpecializedPanel extends JPanel {
 
     Graphics graphics;
 
-    protected void paintRectangle(int y,int x, int width, int height,Color color,Graphics blah){
-        Graphics g=blah;
+    private void paintRectangle(int x,int y, int width, int height,Color color,Graphics g){
         g.setColor(color);
-        g.fillRect(y,x,width,height);
+        g.fillRect(x,y,width,height);
         }
 
-    protected void paintImage(int y, int x, Image img){
+    private void paintCircle(int x, int y, int radius, Color color,Graphics g){
+        g.setColor(color);
+        g.fillOval(x-radius/2,y-radius/2,radius,radius);
+    }
+
+    private void paintImage(int y, int x, Image img){
         Graphics g=getGraphics();
         g.drawImage(img, x, y, new ImageObserver() {
             @Override
@@ -31,8 +35,13 @@ public class SpecializedPanel extends JPanel {
     protected void paintComponent(Graphics g){
         super.paintComponent(g);
         paintRectangle(0, 0, getWidth(), getHeight(), new Color(0, 120, 0, 255), g);
+        paintCircle(90, 90, 160, new Color(67, 54, 49, 255), g);
+        paintCircle(90, 90, 140, new Color(48, 37, 33, 255), g);
+        paintRectangle(20, 200, 400, 300, new Color(120, 0, 0, 255), g);
     }
 
-    public void addDiceToPanel(int numberShown, int location){}
+    public void addDiceToPanel(int numberShown, int location){
+
+    }
 
 }
