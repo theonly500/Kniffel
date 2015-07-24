@@ -1,15 +1,15 @@
-import graphicManaging.BasicComponentManaging;
+import graphicManaging.BasicComponent;
 
 import javax.swing.*;
 
 public class Window {
     JFrame windowFrame;
-    BasicComponentManaging basicComponentManaging;
+    BasicComponent basicComponent;
 
     public Window(){
-        basicComponentManaging=new BasicComponentManaging();
+        basicComponent=new BasicComponent();
         createWindow();
-        windowFrame.add(basicComponentManaging.getBasePanel());
+        windowFrame.add(basicComponent.getBasePanel());
     }
 
 
