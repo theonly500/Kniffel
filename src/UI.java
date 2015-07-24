@@ -16,7 +16,7 @@ class UI {
     //Directly Visible UI Elements
     //Buttons which contain the dices
     private JButton[] diceButtons;
-    //Table which contains the Data
+    //Class Table Data which handels the dataflow of the shown JTable
     private TableData tableData;
 
     //all background elements
@@ -41,26 +41,39 @@ class UI {
     //ImageIconManager class which handles all Images
     private ImageIconManager imageIconManager;
 
+    //Constructor of Class UI Creates all needed Objects, gets Calc for reference
     public UI(Calc calc){
+        //Sets the Language for the JOptionPane Class
         JOptionPane.setDefaultLocale(Locale.ENGLISH);
-        //implement calc
+        //Sets the Reference of the Calc Class Object
         this.calc=calc;
-        imageIconManager=new ImageIconManager();
-        //create the arrays for the dices
+        //Init the Boolean Array rerollDice with null Value
         rerollDice=new boolean[5];
+        //Init the Integer Array DiceResult with null Value
         diceResult=new int[5];
-        rerollCounter=1;
-
-        playerNumber=1;
-        isSelectionConfirmed=false;
     }
 
+    //Method start which starts the UI Processing, gets the ArrayList names containing all Playernames
     public void start(ArrayList<String> names){
+        //Construct an Object of Class ImageIconManager
+        imageIconManager=new ImageIconManager();
+        //Init Integer rerollCounter with value 1
+        rerollCounter=1;
+        //Init Integer playerNumber with value 1
+        playerNumber=1;
+        //Init Boolean isSelectionConfirmed with value false
+        isSelectionConfirmed=false;
+        //Init Integer playerCount with the length of the names ArrayList
         playerCount=names.size();
+        //Init Objects names ArrayList with the Method names ArrayList content
         this.names=names;
+        //Construct an Object of Class TableData
         tableData=new TableData(playerCount,names);
+        //Loop through all 5 dices
         for (int i=0;i<5;i++){
+            //Init the Boolean Array entry at i with value false
             rerollDice[i]=false;
+            //Init the Integer Array entry at i with random value, token from the Method rerollDice out of Calc class
             diceResult[i]=calc.rollDice();
         }
         createUI();
@@ -87,28 +100,35 @@ class UI {
             final int tempNr=i;
             //create a new Button
             diceButtons[i]=new JButton();
-            //set the Button to correct Size
+            //set the Button to correct Size, here it is 100px by 100px
             diceButtons[i].setMaximumSize(new Dimension(100,100));
-            //load in the first image
+            //loads the ImageIcon into Button with index i out of class imageIconManager through Method getImageIcons whit giving it the Number which needs to be shown
             diceButtons[i].setIcon(imageIconManager.getImageIcons(diceResult[i]));
+            //updates the graphical Output of Button with index i to show the Image
             diceButtons[i].updateUI();
             //add the Dice to the Panel witch is nesting all Buttons for the Dices
             diceBase.add(diceButtons[i]);
+            //Add the ActionListener to the Button with index i, using Lambda Syntax
             diceButtons[i].addActionListener(ae ->{
                 //swaps the Pictures corespondingly to the Number
+                //If clause checks whether the rerollcondition is given
+                //If reacts while the rerollDice Array entry at tempNr is false
                 if(!rerollDice[tempNr]){
+                    //loads the ImageIcon into Button with index tempNr out of class imageIconManager through Method getImageIcons whit giving it the Number which needs to be shown
+                    //method adds 6 to the integer value of that button to load the red picture
                     diceButtons[tempNr].setIcon(imageIconManager.getImageIcons(diceResult[tempNr]+6));
                     rerollDice[tempNr]=true;
                 }
+                //Else reacts while the rerollDice Array entry at tempNr is true
                 else {
                     diceButtons[tempNr].setIcon(imageIconManager.getImageIcons(diceResult[tempNr]));
                     rerollDice[tempNr]=false;
                 }
             });
         }
-        diceBase.setSize(500, 150);
         //create and add a Button for rerolling
         JButton rerollButton = new JButton("Reroll!");
+        //add ActionListener with Lambda
         rerollButton.addActionListener(ae -> rerollButtonEvent());
         diceBase.add(rerollButton);
         //create and add a Panel for showing the results
@@ -119,13 +139,18 @@ class UI {
         tableBase.add(tableData.returnTable());
         //create and add a Button for the confirmation of the result
         JButton confirmSelection = new JButton("Confirm Selection");
+        //add ActionListener with Lambda
         confirmSelection.addActionListener(ae -> confirmSelectionButtonEvent());
         tableBase.add(confirmSelection);
+        //sets the size of the Frame to the smallest size possible
         frame.pack();
+        //set frame visible
         frame.setVisible(true);
+        //mark the possible options
         visualizeOptions();
     }
 
+    //Function is reRollClear returns a boolean based on the different states possible
     private boolean isRerollClear(){
         if(selectionConfirmed) {
             return true;
@@ -136,6 +161,10 @@ class UI {
         }
     }
 
+    //Function getRerollType returns a integer based on different states possible
+    //returns 1 for full reroll
+    //returns 2 for partial reroll
+    //returns 0 for no reroll
     private int getRerollType(){
         if(selectionConfirmed){
             return 1;
@@ -146,12 +175,15 @@ class UI {
         }
     }
 
+    //Function rerollType1 rerolls all Buttons and sets the correct number of current player
     private void rerollType1(){
+        //for loop rerolls all dices
         for (int i = 0; i < 5; i++) {
             diceResult[i] = calc.rollDice();
             diceButtons[i].setIcon(imageIconManager.getImageIcons(diceResult[i]));
             rerollDice[i] = false;
         }
+        //if cause checks for current player and if current player in list is not last player in list ads 1 to the number else sets last player in list is active to first player in list
         if (playerNumber < playerCount) {
             playerNumber++;
         } else {
@@ -161,7 +193,9 @@ class UI {
         selectionConfirmed = false;
     }
 
+    //Function rerollType2 rerolls checked Buttons
     private void rerollType2(){
+        //loops through all buttons and rerolls those with the reroll boolean == true
         for (int i = 0; i < 5; i++) {
             if (rerollDice[i]) {
                 diceResult[i] = calc.rollDice();
@@ -172,13 +206,16 @@ class UI {
         rerollCounter++;
     }
 
+    //Function rerollType0 is used as a error catcher
     private void rerollType0(){}
 
+    //Function rerollButtonEvent is called when the rerollEvent is called
     private void rerollButtonEvent(){
+        //create a new thread in order to keep the UI running
         Thread rerollButtonEventThread = new Thread(new Runnable() {
             @Override
             public void run() {
-                visualizeOptions();
+                //tries to reroll, checks if reroll is possible, then gets the type of reroll,
                 try {
                     if(isRerollClear()){
                         int tempInt = getRerollType();
@@ -189,44 +226,60 @@ class UI {
                                 break;
                             default: rerollType0();
                         }
-                    } else {
-                        JOptionPane.showMessageDialog(null, "Please confirm your selection before proceeding");
+                    }
+                    //if reroll is not clear show a
+                    else {
+                        JOptionPane.showMessageDialog(null, "Please confirm your selection before proceeding","Selection Confirmation Needed",JOptionPane.WARNING_MESSAGE);
                     }
                 }
+                //catches Exceptions which might occur
                 catch (Exception e){
+
+                }
+                //always does mark possible options
+                finally {
+                    visualizeOptions();
                 }
             }
         });
+        //starts the thread with the actions in it
         rerollButtonEventThread.start();
     }
 
+    //Function confirmSelectionButtonEvent is called when the confirmSelection Button was pressed.
     private void confirmSelectionButtonEvent(){
+        //Thread as above
         Thread confirmSelectionButtonEventThread = new Thread(new Runnable() {
             @Override
             public void run() {
                 inputDataIntoTableModel();
+                //resets the markings and flags
                 if(isSelectionConfirmed){
                     resetMarkings();
                     isSelectionConfirmed=false;
                     selectionConfirmed=true;
                 }
+                //calculates the sum for your character
                 totalSum();
             }
         });
+        //starts thread
         confirmSelectionButtonEventThread.start();
     }
 
+    //Function visualizeOptions gets called whenever it is needed to
     private void visualizeOptions() {
         Thread visualizeOptionsThread=new Thread(new Runnable() {
             @Override
             public void run() {
 
-
                 ArrayList<Integer> temp;
+                //get the possible options and save them
                 temp = calc.check(diceResult);
-                //System.out.println(temp);
+                //loop through the whole table
                 for (int i = 0; i < 17; i++) {
                     int tempInt = 0;
+                    //set the index right, due to indecrepancies
                     if (i < 7) {
                         tempInt = i;
                     } else {
@@ -277,34 +330,59 @@ class UI {
     }
 
     private void inputDataIntoTableModel(){
+        boolean exceptionThrown=false;
         int tempInt = tableData.returnTable().getSelectedRow();
         if (1 <= tempInt && tempInt <= 6) {
             try {
                 tableData.preSetValueAt(tempInt, playerNumber);
             }catch (IntegerFoundException e){
+                exceptionThrown=true;
                 selectProperLineMessageDialog();
             }catch (IntegerNotFoundException e){
                 if(tableData.returnValueAt(tempInt,playerNumber).equals(" ")){
-                    crossOutMessageDialog();
+                    if(crossOutMessageDialog()==JOptionPane.YES_OPTION){
+                        tableData.setValueAt(calc.points(tempInt),tempInt,playerNumber);
+                        isSelectionConfirmed = true;
+                    }else exceptionThrown=true;
+                }
+            }finally {
+                if(!exceptionThrown){
+                    tableData.setValueAt(calc.points(tempInt),tempInt,playerNumber);
+                    isSelectionConfirmed = true;
                 }
             }
-            tableData.setValueAt(calc.points(tempInt), tempInt, playerNumber);
-            isSelectionConfirmed = true;
+
         } else if (9 <= tempInt && tempInt <= 16) {
-            tableData.setValueAt(calc.points(tempInt + 1), tempInt, playerNumber);
-            isSelectionConfirmed = true;
+            try {
+                tableData.preSetValueAt(tempInt, playerNumber);
+            }catch (IntegerFoundException e){
+                exceptionThrown=true;
+                selectProperLineMessageDialog();
+            }catch (IntegerNotFoundException e){
+                if(tableData.returnValueAt(tempInt,playerNumber).equals(" ")){
+                    if(crossOutMessageDialog()==JOptionPane.YES_OPTION){
+                        tableData.setValueAt(calc.points(tempInt+1),tempInt,playerNumber);
+                        isSelectionConfirmed = true;
+                    }else exceptionThrown=true;
+                }
+            }finally {
+                if(!exceptionThrown){
+                    tableData.setValueAt(calc.points(tempInt+1),tempInt,playerNumber);
+                    isSelectionConfirmed = true;
+                }
+            }
         } else {
             selectProperLineMessageDialog();
             isSelectionConfirmed = false;
         }
     }
 
-    private void crossOutMessageDialog(){
-        JOptionPane.showConfirmDialog(null, "Do you want to cross out the result?","Cross-Out Confirmation",JOptionPane.YES_NO_OPTION);
+    private int crossOutMessageDialog(){
+        return JOptionPane.showConfirmDialog(null, "Do you want to cross out the result?","Cross-Out Confirmation",JOptionPane.YES_NO_OPTION);
     }
 
     private void selectProperLineMessageDialog(){
-        JOptionPane.showMessageDialog(null, "Please choose a proper Line");
+        JOptionPane.showMessageDialog(null, "Please choose a proper Line","Wrong Line Selected",JOptionPane.WARNING_MESSAGE);
     }
 
     private void setupBackgroundColor(){
