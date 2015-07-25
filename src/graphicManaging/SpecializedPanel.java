@@ -10,10 +10,20 @@ import java.util.ArrayList;
 public class SpecializedPanel extends JPanel {
 
     private ArrayList<Integer> diceNumbersOnPlain = new ArrayList<>();
+    private int diceInCup = 0;
 
     private void paintRectangle(int x, int y, int width, int height, Color color, Graphics g) {
         g.setColor(color);
         g.fillRect(x, y, width, height);
+    }
+
+    //angle
+    private void paintTwistedRect(int x, int y, int width, int height, double angle, Color color, Graphics g){
+        g.setColor(color);
+        Polygon turnedRect=new Polygon();
+        turnedRect.addPoint(x,y);
+        turnedRect.addPoint(x+Math.cos(angle)*width,Math.roy+Math.sin(angle)*width);
+        g.drawPolygon(turnedRect);
     }
 
     private void paintCircle(int x, int y, int radius, Color color, Graphics g) {
@@ -46,20 +56,48 @@ public class SpecializedPanel extends JPanel {
                 paintImage(30, 210, 200, 200, imageRead.getImage(diceNumbersOnPlain.get(0)), g);
                 break;
             case 2:
-                paintImage(30,210,150,150,imageRead.getImage(diceNumbersOnPlain.get(0)),g);
-                paintImage(190,210,150,150,imageRead.getImage(diceNumbersOnPlain.get(1)),g);
+                paintImage(30, 210, 150, 150, imageRead.getImage(diceNumbersOnPlain.get(0)), g);
+                paintImage(190, 210, 150, 150, imageRead.getImage(diceNumbersOnPlain.get(1)), g);
                 break;
             case 3:
-                paintImage(30,210,130,130,imageRead.getImage(diceNumbersOnPlain.get(0)),g);
-                paintImage(30,350,130,130,imageRead.getImage(diceNumbersOnPlain.get(1)),g);
-                paintImage(170,250,170,170,imageRead.getImage(diceNumbersOnPlain.get(2)),g);
+                paintImage(30, 210, 130, 130, imageRead.getImage(diceNumbersOnPlain.get(0)), g);
+                paintImage(30, 350, 130, 130, imageRead.getImage(diceNumbersOnPlain.get(1)), g);
+                paintImage(170, 250, 170, 170, imageRead.getImage(diceNumbersOnPlain.get(2)), g);
                 break;
             case 4:
-                paintImage(30,210,130,130,imageRead.getImage(diceNumbersOnPlain.get(0)),g);
-                paintImage(30,350,130,130,imageRead.getImage(diceNumbersOnPlain.get(1)),g);
-                paintImage(170,210,130,130,imageRead.getImage(diceNumbersOnPlain.get(2)),g);
-                paintImage(170,350,130,130,imageRead.getImage(diceNumbersOnPlain.get(3)),g);
+                paintImage(30, 210, 130, 130, imageRead.getImage(diceNumbersOnPlain.get(0)), g);
+                paintImage(30, 350, 130, 130, imageRead.getImage(diceNumbersOnPlain.get(1)), g);
+                paintImage(170, 210, 130, 130, imageRead.getImage(diceNumbersOnPlain.get(2)), g);
+                paintImage(170, 350, 130, 130, imageRead.getImage(diceNumbersOnPlain.get(3)), g);
+                break;
+            case 5:
+                paintImage(30, 210, 110, 110, imageRead.getImage(diceNumbersOnPlain.get(0)), g);
+                paintImage(150, 210, 110, 110, imageRead.getImage(diceNumbersOnPlain.get(1)), g);
+                paintImage(270, 210, 110, 110, imageRead.getImage(diceNumbersOnPlain.get(2)), g);
+                paintImage(30, 330, 110, 110, imageRead.getImage(diceNumbersOnPlain.get(3)), g);
+                paintImage(150, 330, 110, 110, imageRead.getImage(diceNumbersOnPlain.get(4)), g);
+                break;
+            default:
+                break;
         }
+    }
+
+    private void drawCupComponent(Graphics g) {
+        switch (diceInCup) {
+            case 1:
+        }
+    }
+
+    public int getDiceInCup() {
+        return diceInCup;
+    }
+
+    public void setDiceInCup(int diceInCup) {
+        this.diceInCup = diceInCup;
+    }
+
+    public void addDiceToCup() {
+        diceInCup++;
     }
 
     public void addDiceToPlain(int numberOnDice) {

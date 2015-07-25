@@ -24,8 +24,6 @@ public class BasicComponent{
         basePanel.addMouseListener(new MouseListener() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                basePanel.addDiceToPlain(1);
-                basePanel.repaint();
             }
 
             @Override
@@ -45,7 +43,6 @@ public class BasicComponent{
 
             @Override
             public void mouseExited(MouseEvent e) {
-
             }
 
         });
