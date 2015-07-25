@@ -89,6 +89,7 @@ public class SpecializedPanel extends JPanel {
         switch (diceInCup) {
             case 1:
                 paintTwistedRect(100, 100, 30, 30, 20, Color.white, g);
+                break;
         }
     }
 
