@@ -13,6 +13,7 @@ public class BasicComponent{
     public BasicComponent() {
         basePanel = new SpecializedPanel();
         basePanel.addDiceToPlain(2);
+        basePanel.addDiceToCup();
         prepareJPanel();
     }
 

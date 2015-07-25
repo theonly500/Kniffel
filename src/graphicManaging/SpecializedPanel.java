@@ -18,12 +18,14 @@ public class SpecializedPanel extends JPanel {
     }
 
     //angle
-    private void paintTwistedRect(int x, int y, int width, int height, double angle, Color color, Graphics g){
+    private void paintTwistedRect(int x, int y, int width, int height, double angle, Color color, Graphics g) {
         g.setColor(color);
-        Polygon turnedRect=new Polygon();
-        turnedRect.addPoint(x,y);
-        turnedRect.addPoint(x+Math.cos(angle)*width,Math.roy+Math.sin(angle)*width);
-        g.drawPolygon(turnedRect);
+        Polygon turnedRect = new Polygon();
+        turnedRect.addPoint(x, y);
+        turnedRect.addPoint((int) (x + Math.cos((angle) * (Math.PI / 180)) * width + 0.5), (int) (y + Math.sin((angle) * (Math.PI / 180)) * width + 0.5));
+        turnedRect.addPoint((int) ((x + Math.cos((angle) * (Math.PI / 180)) * width + 0.5) - (Math.cos((180 - 90 - angle) * (Math.PI / 180)) * height + 0.5)), (int) ((y + Math.sin((angle) * (Math.PI / 180)) * width + 0.5) + (Math.sin((180 - 90 - angle) * (Math.PI / 180)) * height + 0.5)));
+        turnedRect.addPoint((int) (x - Math.cos((180 - 90 - angle) * (Math.PI / 180)) * height + 0.5), (int) (x + Math.sin((180 - 90 - angle) * (Math.PI / 180)) * height + 0.5));
+        g.fillPolygon(turnedRect);
     }
 
     private void paintCircle(int x, int y, int radius, Color color, Graphics g) {
@@ -47,6 +49,7 @@ public class SpecializedPanel extends JPanel {
         paintCircle(90, 90, 140, new Color(48, 37, 33, 255), g);
         paintRectangle(20, 200, 370, 300, new Color(120, 0, 0, 255), g);
         drawImages(g);
+        drawCupComponent(g);
     }
 
     private void drawImages(Graphics g) {
@@ -85,6 +88,7 @@ public class SpecializedPanel extends JPanel {
     private void drawCupComponent(Graphics g) {
         switch (diceInCup) {
             case 1:
+                paintTwistedRect(100, 100, 30, 30, 20, Color.white, g);
         }
     }
 
