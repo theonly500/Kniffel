@@ -1,5 +1,6 @@
 package graphicManaging;
 
+import Exceptions.NoDiceFoundException;
 import Icons.ImageRead;
 
 import javax.swing.*;
@@ -17,14 +18,13 @@ public class SpecializedPanel extends JPanel {
         g.fillRect(x, y, width, height);
     }
 
-    //angle
     private void paintTwistedRect(int x, int y, int width, int height, double angle, Color color, Graphics g) {
         g.setColor(color);
         Polygon turnedRect = new Polygon();
         turnedRect.addPoint(x, y);
         turnedRect.addPoint((int) (x + Math.cos((angle) * (Math.PI / 180)) * width + 0.5), (int) (y + Math.sin((angle) * (Math.PI / 180)) * width + 0.5));
         turnedRect.addPoint((int) ((x + Math.cos((angle) * (Math.PI / 180)) * width + 0.5) - (Math.cos((180 - 90 - angle) * (Math.PI / 180)) * height + 0.5)), (int) ((y + Math.sin((angle) * (Math.PI / 180)) * width + 0.5) + (Math.sin((180 - 90 - angle) * (Math.PI / 180)) * height + 0.5)));
-        turnedRect.addPoint((int) (x - Math.cos((180 - 90 - angle) * (Math.PI / 180)) * height + 0.5), (int) (x + Math.sin((180 - 90 - angle) * (Math.PI / 180)) * height + 0.5));
+        turnedRect.addPoint((int) (x - Math.cos((180 - 90 - angle) * (Math.PI / 180)) * height + 0.5), (int) (y + Math.sin((180 - 90 - angle) * (Math.PI / 180)) * height + 0.5));
         g.fillPolygon(turnedRect);
     }
 
@@ -88,13 +88,31 @@ public class SpecializedPanel extends JPanel {
     private void drawCupComponent(Graphics g) {
         switch (diceInCup) {
             case 1:
-                paintTwistedRect(100, 100, 30, 30, 20, Color.white, g);
+                paintTwistedRect(50, 50, 30, 30, 10, Color.white, g);
+                break;
+            case 2:
+                paintTwistedRect(50, 45, 30, 30, 10, Color.white, g);
+                paintTwistedRect(60, 90, 30, 30, 30, Color.white, g);
+                break;
+            case 3:
+                paintTwistedRect(50, 45, 30, 30, 10, Color.white, g);
+                paintTwistedRect(60, 90, 30, 30, 45, Color.white, g);
+                paintTwistedRect(90, 75, 30, 30, 22, Color.white, g);
+                break;
+            case 4:
+                paintTwistedRect(50, 45, 30, 30, 10, Color.white, g);
+                paintTwistedRect(60, 90, 30, 30, 45, Color.white, g);
+                paintTwistedRect(90, 75, 30, 30, 22, Color.white, g);
+                paintTwistedRect(120, 115, 30, 30, 78, Color.white, g);
+                break;
+            case 5:
+                paintTwistedRect(50, 45, 30, 30, 10, Color.white, g);
+                paintTwistedRect(60, 90, 30, 30, 45, Color.white, g);
+                paintTwistedRect(90, 75, 30, 30, 22, Color.white, g);
+                paintTwistedRect(120, 115, 30, 30, 78, Color.white, g);
+                paintTwistedRect(120, 40, 30, 30, 30, Color.white, g);
                 break;
         }
-    }
-
-    public int getDiceInCup() {
-        return diceInCup;
     }
 
     public void setDiceInCup(int diceInCup) {
@@ -111,5 +129,24 @@ public class SpecializedPanel extends JPanel {
 
     public void removeDiceFromPlane(int numberOnDice) {
         diceNumbersOnPlain.remove(diceNumbersOnPlain.lastIndexOf(numberOnDice));
+    }
+
+    public int getDiceAt(Point point) throws NoDiceFoundException{
+        switch (diceNumbersOnPlain.size()){
+            case 1:
+                if(point.getX()>=30&&point.getX()<=230&&point.getY()>=210&&point.getY()<=410){
+                    return diceNumbersOnPlain.get(0);
+                }else{
+                    try {
+                        throw new NoDiceFoundException();
+                    }catch (NoDiceFoundException e){
+
+                    }
+
+                }
+break;
+            case 2:
+                if ()
+        }
     }
 }
