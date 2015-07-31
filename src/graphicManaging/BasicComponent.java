@@ -3,8 +3,10 @@ package graphicManaging;
 //test
 
 import javax.swing.*;
+import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.util.Random;
 
 public class BasicComponent{
 
@@ -23,7 +25,17 @@ public class BasicComponent{
         basePanel.addMouseListener(new MouseListener() {
             @Override
             public void mouseClicked(MouseEvent e) {
-
+                if(e.getButton()==1){
+                    Random r=new Random();
+                    basePanel.addDiceToPlain(r.nextInt(5)+1);
+                    basePanel.repaint();
+                }else if(e.getButton()==3){
+                    try {
+                        System.out.println(basePanel.getDiceAt(new Point(e.getX(), e.getY())));
+                    }catch (Exception ex){
+                        System.out.println(ex.getCause());
+                    }
+                }
             }
 
             @Override

@@ -1,6 +1,7 @@
 package graphicManaging;
 
 import Exceptions.NoDiceFoundException;
+import Exceptions.OtherExFoundException;
 import Icons.ImageRead;
 
 import javax.swing.*;
@@ -112,6 +113,8 @@ public class SpecializedPanel extends JPanel {
                 paintTwistedRect(120, 115, 30, 30, 78, Color.white, g);
                 paintTwistedRect(120, 40, 30, 30, 30, Color.white, g);
                 break;
+            default:
+                break;
         }
     }
 
@@ -123,6 +126,10 @@ public class SpecializedPanel extends JPanel {
         diceInCup++;
     }
 
+    public void removeDiceFromCup() {
+        diceInCup--;
+    }
+
     public void addDiceToPlain(int numberOnDice) {
         diceNumbersOnPlain.add(numberOnDice);
     }
@@ -131,22 +138,119 @@ public class SpecializedPanel extends JPanel {
         diceNumbersOnPlain.remove(diceNumbersOnPlain.lastIndexOf(numberOnDice));
     }
 
-    public int getDiceAt(Point point) throws NoDiceFoundException{
-        switch (diceNumbersOnPlain.size()){
+    public int getDiceAt(Point point) throws NoDiceFoundException {
+        switch (diceNumbersOnPlain.size()) {
             case 1:
-                if(point.getX()>=30&&point.getX()<=230&&point.getY()>=210&&point.getY()<=410){
+                if (point.getX() >= 30 && point.getX() <= 230 && point.getY() >= 210 && point.getY() <= 410) {
                     return diceNumbersOnPlain.get(0);
-                }else{
+                } else {
                     try {
                         throw new NoDiceFoundException();
-                    }catch (NoDiceFoundException e){
+                    } catch (NoDiceFoundException e) {
 
+                    } catch (Exception e) {
+                        try {
+                            throw new OtherExFoundException(e);
+                        } catch (Exception ex) {
+
+                        }
                     }
 
                 }
-break;
+                break;
             case 2:
-                if ()
+                if (point.getX() >= 30 && point.getX() <= 180 && point.getY() >= 210 && point.getY() <= 360) {
+                    return diceNumbersOnPlain.get(0);
+                } else if (point.getX() >= 190 && point.getX() <= 340 && point.getY() >= 210 && point.getY() <= 360) {
+                    return diceNumbersOnPlain.get(1);
+                } else {
+                    try {
+                        throw new NoDiceFoundException();
+                    } catch (NoDiceFoundException e) {
+
+                    } catch (Exception e) {
+                        try {
+                            throw new OtherExFoundException(e);
+                        } catch (Exception ex) {
+
+                        }
+                    }
+                }
+                break;
+            case 3:
+                if (point.getX() >= 30 && point.getX() <= 160 && point.getY() >= 210 && point.getY() <= 340) {
+                    return diceNumbersOnPlain.get(0);
+                } else if (point.getX() >= 30 && point.getX() <= 160 && point.getY() >= 350 && point.getY() <= 480) {
+                    return diceNumbersOnPlain.get(1);
+                } else if (point.getX() >= 170 && point.getX() <= 340 && point.getY() >= 250 && point.getY() <= 420) {
+                    return diceNumbersOnPlain.get(2);
+                } else {
+                    try {
+                        throw new NoDiceFoundException();
+                    } catch (NoDiceFoundException e) {
+
+                    } catch (Exception e) {
+                        try {
+                            throw new OtherExFoundException(e);
+                        } catch (Exception ex) {
+
+                        }
+                    }
+                }
+                break;
+            case 4:
+                if (point.getX() >= 30 && point.getX() <= 160 && point.getY() >= 210 && point.getY() <= 340) {
+                    return diceNumbersOnPlain.get(0);
+                } else if (point.getX() >= 30 && point.getX() <= 160 && point.getY() >= 350 && point.getY() <= 480) {
+                    return diceNumbersOnPlain.get(1);
+                } else if (point.getX() >= 170 && point.getX() <= 300 && point.getY() >= 210 && point.getY() <= 340) {
+                    return diceNumbersOnPlain.get(2);
+                } else if (point.getX() >= 170 && point.getX() <= 300 && point.getY() >= 350 && point.getY() <= 480) {
+                    return diceNumbersOnPlain.get(3);
+                } else {
+                    try {
+                        throw new NoDiceFoundException();
+                    } catch (NoDiceFoundException e) {
+
+                    } catch (Exception e) {
+                        try {
+                            throw new OtherExFoundException(e);
+                        } catch (Exception ex) {
+
+                        }
+                    }
+                }
+                break;
+            case 5:
+                if (point.getX() >= 30 && point.getX() <= 140 && point.getY() >= 210 && point.getY() <= 320) {
+                    return diceNumbersOnPlain.get(0);
+                } else if (point.getX() >= 150 && point.getX() <= 260 && point.getY() >= 210 && point.getY() <= 320) {
+                    return diceNumbersOnPlain.get(1);
+                } else if (point.getX() >= 270 && point.getX() <= 380 && point.getY() >= 210 && point.getY() <= 320) {
+                    return diceNumbersOnPlain.get(2);
+                } else if (point.getX() >= 30 && point.getX() <= 140 && point.getY() >= 210 && point.getY() <= 320) {
+                    return diceNumbersOnPlain.get(3);
+                } else if (point.getX() >= 150 && point.getX() <= 260 && point.getY() >= 210 && point.getY() <= 320) {
+                    return diceNumbersOnPlain.get(4);
+                } else {
+                    try {
+                        throw new NoDiceFoundException();
+                    } catch (NoDiceFoundException e) {
+
+                    } catch (Exception e) {
+                        try {
+                            throw new OtherExFoundException(e);
+                        } catch (Exception ex) {
+
+                        }
+                    }
+                }
+                break;
+            default:
+                return 0;
+
         }
+
+        return 0;
     }
 }
