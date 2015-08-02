@@ -70,8 +70,8 @@ public class SpecializedPanel extends JPanel {
                 break;
             case 4:
                 paintImage(30, 210, 130, 130, imageRead.getImage(diceNumbersOnPlain.get(0)), g);
-                paintImage(30, 350, 130, 130, imageRead.getImage(diceNumbersOnPlain.get(1)), g);
-                paintImage(170, 210, 130, 130, imageRead.getImage(diceNumbersOnPlain.get(2)), g);
+                paintImage(170, 210, 130, 130, imageRead.getImage(diceNumbersOnPlain.get(1)), g);
+                paintImage(30, 350, 130, 130, imageRead.getImage(diceNumbersOnPlain.get(2)), g);
                 paintImage(170, 350, 130, 130, imageRead.getImage(diceNumbersOnPlain.get(3)), g);
                 break;
             case 5:
@@ -201,9 +201,9 @@ public class SpecializedPanel extends JPanel {
             case 4:
                 if (point.getX() >= 30 && point.getX() <= 160 && point.getY() >= 210 && point.getY() <= 340) {
                     return diceNumbersOnPlain.get(0);
-                } else if (point.getX() >= 30 && point.getX() <= 160 && point.getY() >= 350 && point.getY() <= 480) {
-                    return diceNumbersOnPlain.get(1);
                 } else if (point.getX() >= 170 && point.getX() <= 300 && point.getY() >= 210 && point.getY() <= 340) {
+                    return diceNumbersOnPlain.get(1);
+                } else if (point.getX() >= 30 && point.getX() <= 160 && point.getY() >= 350 && point.getY() <= 480) {
                     return diceNumbersOnPlain.get(2);
                 } else if (point.getX() >= 170 && point.getX() <= 300 && point.getY() >= 350 && point.getY() <= 480) {
                     return diceNumbersOnPlain.get(3);
@@ -228,9 +228,9 @@ public class SpecializedPanel extends JPanel {
                     return diceNumbersOnPlain.get(1);
                 } else if (point.getX() >= 270 && point.getX() <= 380 && point.getY() >= 210 && point.getY() <= 320) {
                     return diceNumbersOnPlain.get(2);
-                } else if (point.getX() >= 30 && point.getX() <= 140 && point.getY() >= 210 && point.getY() <= 320) {
+                } else if (point.getX() >= 30 && point.getX() <= 140 && point.getY() >= 350 && point.getY() <= 460) {
                     return diceNumbersOnPlain.get(3);
-                } else if (point.getX() >= 150 && point.getX() <= 260 && point.getY() >= 210 && point.getY() <= 320) {
+                } else if (point.getX() >= 150 && point.getX() <= 260 && point.getY() >= 350 && point.getY() <= 460) {
                     return diceNumbersOnPlain.get(4);
                 } else {
                     try {
