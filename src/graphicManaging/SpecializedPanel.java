@@ -118,16 +118,16 @@ public class SpecializedPanel extends JPanel {
         }
     }
 
-    public void setDiceInCup(int diceInCup) {
-        this.diceInCup = diceInCup;
+    public void fillCup() {
+        diceInCup=5;
     }
 
     public void addDiceToCup() {
         diceInCup++;
     }
 
-    public void removeDiceFromCup() {
-        diceInCup--;
+    public void emptyCup() {
+        diceInCup=0;
     }
 
     public void addDiceToPlain(int numberOnDice) {
@@ -136,6 +136,10 @@ public class SpecializedPanel extends JPanel {
 
     public void removeDiceFromPlane(int numberOnDice) {
         diceNumbersOnPlain.remove(diceNumbersOnPlain.lastIndexOf(numberOnDice));
+    }
+
+    public void clearPlain(){
+        diceNumbersOnPlain.clear();
     }
 
     public int getDiceAt(Point point) throws NoDiceFoundException {
